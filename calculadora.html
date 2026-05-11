@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, user-scalable=yes">
+  <title>Calculadora de presupuesto | FixLab</title>
+  <meta name="description" content="Calcula el precio estimado de reparación de tu móvil al instante. FixLab - Reparación profesional.">
+  <link rel="icon" type="image/png" href="Fotos/FixLab_Logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Share+Tech+Mono&family=Inter:wght@400;500;600;700;800&display=swap">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Share+Tech+Mono&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Share+Tech+Mono&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"></noscript>
+  <link rel="stylesheet" href="assets/css/styles.css?v=2">
+</head>
+<body class="calculadora-page">
+  <header class="site-header">
+    <nav class="container nav">
+      <a class="brand" href="index.html" aria-label="Ir a inicio">
+        <img src="Fotos/FixLab_Logo.png" alt="Logo FixLab" class="brand-logo">
+      </a>
+      <button id="menuToggle" class="menu-toggle" aria-label="Abrir menú">Menú</button>
+      <ul id="navLinks" class="nav-links">
+        <li><a href="index.html">Inicio</a></li>
+        <li><a href="servicios.html">Servicios</a></li>
+        <li><a href="calculadora.html" class="active">Presupuesto</a></li>
+        <li><a href="tiendas.html">Tiendas</a></li>
+        <li><a href="tienda.html">Tienda</a></li>
+        <li><a href="contacto.html">Contacto</a></li>
+      </ul>
+        <div style="display:flex; gap:0.5rem; align-items:center;">
+          <a class="btn btn-login" href="login.html">Login</a>
+        </div>
+    </nav>
+  </header>
+
+  <main class="page-main">
+    <section class="section reveal">
+      <div class="container calc-container">
+        <h1 class="section-title" data-editable="calc-title">Calculadora de presupuesto</h1>
+        <p class="section-subtitle" data-editable="calc-subtitle">Selecciona tu móvil y avería para obtener precio y tiempo estimado al instante.</p>
+
+        <div class="calc-grid">
+          <div class="calc-form">
+            <div class="field">
+              <label for="calcModel">Modelo de móvil</label>
+              <input type="text" id="calcModelSearch" class="calc-search" placeholder="Buscar modelo..." autocomplete="off">
+              <select id="calcModel" class="calc-select">
+                <option value="">-- Selecciona modelo --</option>
+                <optgroup label="iPhone">
+                  <option value="iPhone 11">iPhone 11</option>
+                  <option value="iPhone 12">iPhone 12</option>
+                  <option value="iPhone 12 Pro">iPhone 12 Pro</option>
+                  <option value="iPhone 13">iPhone 13</option>
+                  <option value="iPhone 13 Pro">iPhone 13 Pro</option>
+                  <option value="iPhone 14">iPhone 14</option>
+                  <option value="iPhone 14 Pro">iPhone 14 Pro</option>
+                  <option value="iPhone 15">iPhone 15</option>
+                  <option value="iPhone 15 Pro">iPhone 15 Pro</option>
+                </optgroup>
+                <optgroup label="Samsung">
+                  <option value="Samsung Galaxy S21">Samsung Galaxy S21</option>
+                  <option value="Samsung Galaxy S22">Samsung Galaxy S22</option>
+                  <option value="Samsung Galaxy S23">Samsung Galaxy S23</option>
+                  <option value="Samsung Galaxy S24">Samsung Galaxy S24</option>
+                  <option value="Samsung Galaxy A54">Samsung Galaxy A54</option>
+                  <option value="Samsung Galaxy A34">Samsung Galaxy A34</option>
+                  <option value="Samsung Galaxy A14">Samsung Galaxy A14</option>
+                </optgroup>
+                <optgroup label="Xiaomi">
+                  <option value="Xiaomi Redmi Note 12">Xiaomi Redmi Note 12</option>
+                  <option value="Xiaomi Redmi Note 13">Xiaomi Redmi Note 13</option>
+                  <option value="Xiaomi 13T">Xiaomi 13T</option>
+                  <option value="Xiaomi 14T">Xiaomi 14T</option>
+                </optgroup>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="calcIssue">Tipo de avería</label>
+              <select id="calcIssue" class="calc-select">
+                <option value="">-- Selecciona avería --</option>
+                <option value="pantalla">Pantalla</option>
+                <option value="bateria">Batería</option>
+                <option value="camara">Cámara</option>
+                <option value="agua">Daño por agua</option>
+                <option value="conector">Conector carga</option>
+                <option value="botones">Botones</option>
+                <option value="altavoz">Altavoz</option>
+                <option value="microfono">Micrófono</option>
+              </select>
+            </div>
+            </div>
+
+            <button type="button" class="btn btn-primary" style="margin-top:1rem;" onclick="calcularPresupuesto()">Ver presupuesto</button>
+
+           <div id="calcResult" class="calc-result" hidden>
+             <div class="calc-result-inner">
+               <h3 class="calc-result-title">Presupuesto estimado</h3>
+               <div class="calc-result-model" id="calcResultModel"></div>
+               <div class="calc-result-issue" id="calcResultIssue"></div>
+               <div class="calc-result-price" id="calcResultPrice"></div>
+               <div class="calc-result-meta">
+                 <div class="calc-meta-item">
+                   <span class="calc-meta-label">Tiempo estimado</span>
+                   <span class="calc-meta-value" id="calcResultTime"></span>
+                 </div>
+                 <div class="calc-meta-item">
+                   <span class="calc-meta-label">Disponibilidad</span>
+                   <span class="calc-meta-value" id="calcResultStock"></span>
+                 </div>
+               </div>
+               <a href="reserva.html" id="calcReserveBtn" class="btn btn-primary calc-reserve-btn">Reservar esta reparación</a>
+             </div>
+           </div>
+
+           <script>
+           function calcularPresupuesto() {
+             const model = document.getElementById("calcModel")?.value || "";
+             const issue = document.getElementById("calcIssue")?.value || "";
+             const result = document.getElementById("calcResult");
+             if (!result) return;
+
+             if (!model || !issue) {
+               document.getElementById("calcResultModel").textContent = "Selecciona modelo y avería";
+               result.hidden = false;
+               return;
+             }
+
+             const precios = {
+               pantalla: { base: 69, mult: 1.4, time: "30-60 min", stock: "Stock disponible" },
+               bateria:  { base: 49, mult: 1.2, time: "30-45 min", stock: "Stock disponible" },
+               camara:   { base: 55, mult: 1.3, time: "30-60 min", stock: "Stock disponible" },
+               agua:     { base: 59, mult: 1.0, time: "24-48h",    stock: "Bajo pedido 24-48h" },
+               conector: { base: 45, mult: 1.2, time: "30-45 min", stock: "Stock disponible" },
+               botones:  { base: 39, mult: 1.1, time: "30-45 min", stock: "Stock disponible" },
+               altavoz:  { base: 35, mult: 1.1, time: "30-45 min", stock: "Stock disponible" },
+               microfono:{ base: 35, mult: 1.1, time: "30-45 min", stock: "Stock disponible" }
+             };
+
+             const premium = ["iPhone 12 Pro","iPhone 13 Pro","iPhone 14 Pro","iPhone 15 Pro","Samsung Galaxy S21","Samsung Galaxy S22","Samsung Galaxy S23","Samsung Galaxy S24"];
+
+             const repair = precios[issue];
+             if (!repair) return;
+
+             const isPremium = premium.includes(model);
+             const price = Math.round(repair.base * (isPremium ? repair.mult : 1));
+             const priceMax = Math.round(price * 1.3);
+
+             document.getElementById("calcResultModel").textContent = model;
+             document.getElementById("calcResultIssue").textContent = issue.charAt(0).toUpperCase() + issue.slice(1);
+             document.getElementById("calcResultPrice").textContent = price === priceMax ? price + "€" : price + "€ - " + priceMax + "€";
+             document.getElementById("calcResultTime").textContent = repair.time;
+             document.getElementById("calcResultStock").textContent = repair.stock;
+             result.hidden = false;
+
+             const btn = document.getElementById("calcReserveBtn");
+             if (btn) btn.href = "reserva.html?service=" + encodeURIComponent(issue) + "&model=" + encodeURIComponent(model);
+           }
+           </script>
+
+           <div id="calcResult" class="calc-result" hidden>
+            <div class="calc-result-inner">
+              <h3 class="calc-result-title">Presupuesto estimado</h3>
+              <div class="calc-result-model" id="calcResultModel"></div>
+              <div class="calc-result-issue" id="calcResultIssue"></div>
+              <div class="calc-result-price" id="calcResultPrice"></div>
+              <div class="calc-result-meta">
+                <div class="calc-meta-item">
+                  <span class="calc-meta-label">Tiempo estimado</span>
+                  <span class="calc-meta-value" id="calcResultTime"></span>
+                </div>
+                <div class="calc-meta-item">
+                  <span class="calc-meta-label">Disponibilidad</span>
+                  <span class="calc-meta-value" id="calcResultStock"></span>
+                </div>
+              </div>
+              <a href="reserva.html" id="calcReserveBtn" class="btn btn-primary calc-reserve-btn">Reservar esta reparación</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <nav class="footer-links">
+        <a href="index.html">Inicio</a>
+        <a href="servicios.html">Servicios</a>
+        <a href="calculadora.html">Presupuesto</a>
+        <a href="tiendas.html">Tiendas</a>
+        <a href="tienda.html">Tienda</a>
+        <a href="seguimiento-publico.html">Seguimiento</a>
+        <a href="contacto.html">Contacto</a>
+        <a href="aviso-legal.html">Legal</a>
+      </nav>
+      <p>© <span id="year"></span> FixLab</p>
+    </div>
+  </footer>
+
+  <a class="whatsapp-float" href="https://wa.me/34600000000?text=Hola%20FixLab%2C%20quiero%20informaci%C3%B3n%20sobre%20una%20reparaci%C3%B3n." target="_blank" rel="noopener noreferrer" aria-label="Contactar por WhatsApp">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+  </a>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="assets/js/supabase-config.js"></script>
+  <script src="assets/js/supabase-db.js"></script>
+  <script src="assets/js/script.js"></script>
+</body>
+</html>

@@ -1,0 +1,1610 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+   <title>FixLab — Panel de Administración</title>
+  <link rel="stylesheet" href="assets/css/styles.css?v=2">
+  <link rel="icon" type="image/png" href="Fotos/FixLab_Logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Share+Tech+Mono&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:           #020810;
+      --surface:      #0a1628;
+      --surface-2:    #0f1f3a;
+      --surface-3:    #152840;
+      --neon-yellow:  #F5E642;
+      --neon-purple:  #B44DFF;
+      --neon-cyan:    #00E5FF;
+      --neon-pink:    #FF2D78;
+      --neon-green:   #39FF14;
+      --text:         #F0EEF8;
+      --muted:        #8899BB;
+      --border:       rgba(180,77,255,0.3);
+      --glow-y:       0 0 20px rgba(245,230,66,0.5);
+      --glow-p:       0 0 20px rgba(180,77,255,0.5);
+      --glow-c:       0 0 20px rgba(0,229,255,0.5);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: "Inter", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── Grid fondo ────────────────────────────────────── */
+    body::before {
+      content: "";
+      position: fixed; inset: 0;
+      background-image:
+        linear-gradient(rgba(245,230,66,0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(245,230,66,0.025) 1px, transparent 1px),
+        radial-gradient(ellipse at 10% 0%, rgba(180,77,255,0.15) 0%, transparent 50%),
+        radial-gradient(ellipse at 90% 100%, rgba(0,229,255,0.12) 0%, transparent 50%);
+      background-size: 40px 40px, 40px 40px, 100% 100%, 100% 100%;
+      pointer-events: none; z-index: 0;
+    }
+
+    /* ── LOGIN ─────────────────────────────────────────── */
+    #loginScreen {
+      position: fixed; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      z-index: 1000; background: var(--bg);
+    }
+
+    .login-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 2.5rem 3rem;
+      width: min(420px, 90vw);
+      text-align: center;
+      box-shadow: 0 0 60px rgba(180,77,255,0.15);
+    }
+
+    .login-box img { width: 160px; margin: 0 auto 1.5rem; }
+
+    .login-box h2 {
+      font-family: "Orbitron", sans-serif;
+      font-size: 1rem; letter-spacing: 0.1em;
+      color: var(--neon-yellow); margin-bottom: 1.5rem;
+    }
+
+    .login-field { margin-bottom: 1rem; text-align: left; }
+    .login-field label {
+      display: block; font-family: "Share Tech Mono", monospace;
+      font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase;
+      color: var(--muted); margin-bottom: 0.4rem;
+    }
+    .login-field input {
+      width: 100%; padding: 0.75rem 1rem;
+      background: var(--surface-2); border: 1px solid var(--border);
+      border-radius: 6px; color: var(--text); font-size: 0.95rem;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .login-field input:focus {
+      outline: none; border-color: var(--neon-purple);
+      box-shadow: var(--glow-p);
+    }
+
+    .btn-login-submit {
+      width: 100%; padding: 0.9rem;
+      background: var(--neon-yellow); color: #0a0a0a;
+      border: none; border-radius: 6px; font-weight: 800;
+      font-family: "Orbitron", sans-serif; font-size: 0.85rem;
+      letter-spacing: 0.08em; cursor: pointer; margin-top: 0.5rem;
+      transition: box-shadow 0.2s, transform 0.15s;
+    }
+    .btn-login-submit:hover {
+      box-shadow: var(--glow-y); transform: translateY(-2px);
+    }
+    #loginError {
+      color: var(--neon-pink); font-size: 0.85rem;
+      margin-top: 0.75rem; min-height: 1.2em;
+    }
+
+    /* ── LAYOUT PRINCIPAL ──────────────────────────────── */
+    #appShell { display: none; position: relative; z-index: 1; }
+
+    /* Sidebar */
+    .sidebar {
+      position: fixed; top: 0; left: 0;
+      width: 220px; height: 100vh;
+      background: rgba(10,22,40,0.97);
+      border-right: 1px solid var(--border);
+      backdrop-filter: blur(20px);
+      display: flex; flex-direction: column;
+      z-index: 100; padding: 1.5rem 0;
+    }
+
+    .sidebar-logo {
+      padding: 0 1.5rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .sidebar-logo img { width: 140px; }
+
+    .sidebar-nav { flex: 1; padding: 1rem 0; }
+
+    .nav-item {
+      display: flex; align-items: center; gap: 0.75rem;
+      padding: 0.75rem 1.5rem;
+      color: var(--muted); text-decoration: none;
+      font-size: 0.88rem; font-weight: 500;
+      cursor: pointer; border: none; background: none; width: 100%;
+      text-align: left; transition: color 0.2s, background 0.2s;
+      position: relative; border-left: 3px solid transparent;
+    }
+    .nav-item:hover { color: var(--text); background: rgba(180,77,255,0.08); }
+    .nav-item.active {
+      color: var(--neon-yellow);
+      border-left-color: var(--neon-yellow);
+      background: rgba(245,230,66,0.06);
+    }
+    .nav-item .icon { font-size: 1.1rem; width: 20px; text-align: center; }
+
+    .sidebar-footer {
+      padding: 1rem 1.5rem;
+      border-top: 1px solid var(--border);
+    }
+    .btn-logout {
+      width: 100%; padding: 0.6rem;
+      background: transparent; border: 1px solid rgba(255,45,120,0.4);
+      border-radius: 6px; color: var(--neon-pink); font-size: 0.8rem;
+      font-family: "Orbitron", sans-serif; letter-spacing: 0.06em;
+      cursor: pointer; transition: all 0.2s;
+    }
+    .btn-logout:hover { background: rgba(255,45,120,0.1); box-shadow: var(--glow-p); }
+
+    /* Main content */
+    .main {
+      margin-left: 220px;
+      min-height: 100vh;
+      padding: 2rem 2.5rem;
+    }
+
+    .topbar {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 2rem;
+    }
+    .topbar h1 {
+      font-family: "Orbitron", sans-serif;
+      font-size: 1.4rem; letter-spacing: 0.04em;
+      color: var(--neon-yellow);
+    }
+    .topbar-actions { display: flex; gap: 0.75rem; }
+
+    .btn-sm {
+      padding: 0.5rem 1rem;
+      border-radius: 6px; font-size: 0.8rem; font-weight: 600;
+      cursor: pointer; transition: all 0.2s; letter-spacing: 0.04em;
+      border: 1px solid var(--border);
+    }
+    .btn-outline {
+      background: transparent; color: var(--neon-cyan);
+      border-color: var(--neon-cyan);
+    }
+    .btn-outline:hover { background: rgba(0,229,255,0.1); box-shadow: var(--glow-c); }
+
+    .btn-primary-sm {
+      background: var(--neon-yellow); color: #0a0a0a;
+      border-color: var(--neon-yellow); font-weight: 800;
+    }
+    .btn-primary-sm:hover { box-shadow: var(--glow-y); }
+
+    /* Secciones/views */
+    .view { display: none; }
+    .view.active { display: block; }
+
+    /* ── KPI CARDS ─────────────────────────────────────── */
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem; margin-bottom: 2rem;
+    }
+
+    .kpi-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px; padding: 1.4rem;
+      position: relative; overflow: hidden;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .kpi-card:hover { transform: translateY(-3px); }
+    .kpi-card::before {
+      content: ""; position: absolute;
+      top: 0; left: 0; right: 0; height: 3px;
+    }
+    .kpi-card.yellow::before { background: var(--neon-yellow); box-shadow: var(--glow-y); }
+    .kpi-card.purple::before { background: var(--neon-purple); box-shadow: var(--glow-p); }
+    .kpi-card.cyan::before   { background: var(--neon-cyan);   box-shadow: var(--glow-c); }
+    .kpi-card.pink::before   { background: var(--neon-pink);   box-shadow: 0 0 20px rgba(255,45,120,0.5); }
+
+    .kpi-card:hover.yellow { box-shadow: 0 8px 30px rgba(245,230,66,0.15); }
+    .kpi-card:hover.purple { box-shadow: 0 8px 30px rgba(180,77,255,0.15); }
+    .kpi-card:hover.cyan   { box-shadow: 0 8px 30px rgba(0,229,255,0.15); }
+    .kpi-card:hover.pink   { box-shadow: 0 8px 30px rgba(255,45,120,0.15); }
+
+    .kpi-label {
+      font-family: "Share Tech Mono", monospace;
+      font-size: 0.72rem; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--muted);
+      margin-bottom: 0.5rem;
+    }
+    .kpi-value {
+      font-family: "Orbitron", sans-serif;
+      font-size: 2rem; font-weight: 900;
+      line-height: 1; margin-bottom: 0.4rem;
+    }
+    .kpi-card.yellow .kpi-value { color: var(--neon-yellow); }
+    .kpi-card.purple .kpi-value { color: var(--neon-purple); }
+    .kpi-card.cyan   .kpi-value { color: var(--neon-cyan); }
+    .kpi-card.pink   .kpi-value { color: var(--neon-pink); }
+
+    .kpi-sub { font-size: 0.78rem; color: var(--muted); }
+    .kpi-icon {
+      position: absolute; right: 1.2rem; top: 1.2rem;
+      font-size: 1.8rem; opacity: 0.15;
+    }
+
+    /* ── CHARTS ROW ────────────────────────────────────── */
+    .charts-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem; margin-bottom: 1.5rem;
+    }
+    .charts-row-3 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 1.5rem; margin-bottom: 1.5rem;
+    }
+
+    .chart-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px; padding: 1.5rem;
+    }
+    .chart-title {
+      font-family: "Orbitron", sans-serif;
+      font-size: 0.78rem; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--neon-cyan);
+      margin-bottom: 1.2rem;
+    }
+
+    /* ── TABLA RESERVAS ────────────────────────────────── */
+    .table-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px; padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .table-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 1rem;
+    }
+    .table-title {
+      font-family: "Orbitron", sans-serif;
+      font-size: 0.78rem; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--neon-cyan);
+    }
+
+    .search-input {
+      padding: 0.5rem 0.9rem;
+      background: var(--surface-2); border: 1px solid var(--border);
+      border-radius: 6px; color: var(--text); font-size: 0.85rem;
+      width: 220px; transition: border-color 0.2s;
+    }
+    .search-input:focus { outline: none; border-color: var(--neon-cyan); }
+
+    table { width: 100%; border-collapse: collapse; }
+    thead th {
+      font-family: "Share Tech Mono", monospace;
+      font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase;
+      color: var(--muted); text-align: left;
+      padding: 0.6rem 0.8rem; border-bottom: 1px solid var(--border);
+    }
+    tbody tr {
+      border-bottom: 1px solid rgba(180,77,255,0.1);
+      transition: background 0.15s;
+    }
+    tbody tr:hover { background: rgba(180,77,255,0.05); }
+    tbody td {
+      padding: 0.75rem 0.8rem; font-size: 0.85rem; color: var(--text);
+      vertical-align: middle;
+    }
+    .mono { font-family: "Share Tech Mono", monospace; font-size: 0.8rem; }
+    .muted { color: var(--muted); }
+
+    /* Status badges */
+    .badge {
+      display: inline-flex; align-items: center; gap: 0.35rem;
+      padding: 0.25rem 0.65rem; border-radius: 20px;
+      font-size: 0.72rem; font-weight: 600; letter-spacing: 0.04em;
+      white-space: nowrap;
+    }
+    .badge-dot { width: 6px; height: 6px; border-radius: 50%; }
+    .badge-recibida   { background: rgba(180,77,255,0.15); color: var(--neon-purple); }
+    .badge-recibida   .badge-dot { background: var(--neon-purple); }
+    .badge-diagnostico{ background: rgba(0,229,255,0.12); color: var(--neon-cyan); }
+    .badge-diagnostico .badge-dot { background: var(--neon-cyan); }
+    .badge-reparando  { background: rgba(245,230,66,0.12); color: var(--neon-yellow); }
+    .badge-reparando  .badge-dot { background: var(--neon-yellow); }
+    .badge-listo      { background: rgba(57,255,20,0.12); color: var(--neon-green); }
+    .badge-listo      .badge-dot { background: var(--neon-green); }
+    .badge-entregado  { background: rgba(100,100,120,0.2); color: var(--muted); }
+    .badge-entregado  .badge-dot { background: var(--muted); }
+
+    /* Status select inline */
+    .status-select {
+      background: transparent; border: 1px solid var(--border);
+      border-radius: 4px; color: var(--text); font-size: 0.78rem;
+      padding: 0.2rem 0.4rem; cursor: pointer;
+    }
+    .status-select:focus { outline: none; border-color: var(--neon-purple); }
+    .status-actions {
+      display: flex; align-items: center; gap: 0.45rem; flex-wrap: wrap;
+    }
+    .status-accept-btn {
+      border: 1px solid var(--neon-cyan);
+      background: rgba(0,229,255,0.08);
+      color: var(--neon-cyan);
+      border-radius: 4px;
+      padding: 0.24rem 0.55rem;
+      font-size: 0.72rem;
+      font-weight: 800;
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .status-accept-btn:hover {
+      background: rgba(0,229,255,0.18);
+      box-shadow: 0 0 12px rgba(0,229,255,0.25);
+    }
+
+    /* Pagination */
+    .pagination {
+      display: flex; gap: 0.5rem; align-items: center;
+      justify-content: flex-end; margin-top: 1rem;
+    }
+    .page-btn {
+      width: 32px; height: 32px; border-radius: 6px;
+      background: var(--surface-2); border: 1px solid var(--border);
+      color: var(--muted); font-size: 0.82rem; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.15s;
+    }
+    .page-btn:hover, .page-btn.active {
+      background: rgba(180,77,255,0.15); color: var(--neon-purple);
+      border-color: var(--neon-purple);
+    }
+
+    /* ── CLIENTES ──────────────────────────────────────── */
+    .user-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+    }
+    .user-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px; padding: 1.2rem;
+      transition: transform 0.2s;
+    }
+    .user-card:hover { transform: translateY(-2px); }
+    .user-avatar {
+      width: 44px; height: 44px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--neon-purple), var(--neon-cyan));
+      display: flex; align-items: center; justify-content: center;
+      font-family: "Orbitron", sans-serif; font-weight: 700;
+      font-size: 1rem; color: #fff; margin-bottom: 0.75rem;
+    }
+    .user-name { font-weight: 600; font-size: 0.9rem; }
+    .user-email { font-size: 0.78rem; color: var(--muted); margin-top: 0.2rem; }
+    .user-meta { font-size: 0.75rem; color: var(--muted); margin-top: 0.6rem; font-family: "Share Tech Mono", monospace; }
+
+    /* ── EMPTY STATE ───────────────────────────────────── */
+    .empty-state {
+      text-align: center; padding: 3rem 1rem;
+      color: var(--muted); font-size: 0.9rem;
+    }
+    .empty-state .empty-icon { font-size: 3rem; margin-bottom: 0.75rem; opacity: 0.5; }
+    .empty-state p { margin-bottom: 1rem; }
+
+    /* ── SCROLLBAR ─────────────────────────────────────── */
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--neon-purple); border-radius: 3px; }
+
+    /* ── RESPONSIVE ────────────────────────────────────── */
+    @media (max-width: 1200px) {
+      .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+      .charts-row-3 { grid-template-columns: 1fr 1fr; }
+      .user-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 900px) {
+      .sidebar { width: 60px; }
+      .sidebar .sidebar-logo img,
+      .sidebar .nav-item span,
+      .sidebar .btn-logout span,
+      .sidebar-footer .btn-logout { display: none; }
+      .nav-item { padding: 0.75rem; justify-content: center; }
+      .main { margin-left: 60px; padding: 1.5rem; }
+      .charts-row, .charts-row-3 { grid-template-columns: 1fr; }
+      .kpi-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 600px) {
+      .kpi-grid { grid-template-columns: 1fr; }
+      .topbar { flex-direction: column; gap: 1rem; align-items: flex-start; }
+    }
+
+    /* ── ANIMACIONES ───────────────────────────────────── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: none; }
+    }
+    .kpi-card { animation: fadeUp 0.4s ease both; }
+    .kpi-card:nth-child(1) { animation-delay: 0.05s; }
+    .kpi-card:nth-child(2) { animation-delay: 0.10s; }
+    .kpi-card:nth-child(3) { animation-delay: 0.15s; }
+    .kpi-card:nth-child(4) { animation-delay: 0.20s; }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation: none !important; transition: none !important; }
+    }
+
+    /* ── TOOLTIP ───────────────────────────────────────── */
+    .tooltip-wrap { position: relative; display: inline-block; }
+    .tooltip-label {
+      position: absolute; bottom: calc(100% + 6px); left: 50%;
+      transform: translateX(-50%);
+      background: var(--surface-3); border: 1px solid var(--border);
+      border-radius: 4px; padding: 0.3rem 0.6rem;
+      font-size: 0.72rem; color: var(--text); white-space: nowrap;
+      pointer-events: none; opacity: 0; transition: opacity 0.15s;
+      font-family: "Share Tech Mono", monospace;
+    }
+    .tooltip-wrap:hover .tooltip-label { opacity: 1; }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════ LOGIN ══════════════ -->
+<div id="loginScreen">
+  <div class="login-box">
+    <img src="Fotos/FixLab_Logo.png" alt="FixLab" onerror="this.style.display='none'">
+    <h2>PANEL DE ADMINISTRACIÓN</h2>
+    <div class="login-field">
+      <label>Usuario</label>
+      <input type="text" id="adminUser" placeholder="admin" autocomplete="username">
+    </div>
+    <div class="login-field">
+      <label>Contraseña</label>
+      <input type="password" id="adminPass" placeholder="••••••••" autocomplete="current-password">
+    </div>
+    <button class="btn-login-submit" onclick="handleLogin()">ACCEDER</button>
+    <div id="loginError"></div>
+    <button
+      id="devResetBtn"
+      type="button"
+      onclick="resetFixLabData()"
+      style="display:none; margin-top:0.75rem; width:100%; padding:0.55rem; background:transparent; border:1px dashed rgba(255,45,120,0.45); border-radius:6px; color:#FF2D78; font-size:0.75rem; cursor:pointer;"
+    >
+      Reset datos (dev)
+    </button>
+  </div>
+</div>
+
+<!-- ══════════════ APP ══════════════ -->
+<div id="appShell">
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <img src="Fotos/FixLab_Logo.png" alt="FixLab" onerror="this.style.display='none'">
+    </div>
+    <nav class="sidebar-nav">
+      <button class="nav-item active" onclick="showView('overview')" data-view="overview">
+        <span class="icon">📊</span><span>Resumen</span>
+      </button>
+      <button class="nav-item" onclick="showView('reservas')" data-view="reservas">
+        <span class="icon">🔧</span><span>Reservas</span>
+      </button>
+      <button class="nav-item" onclick="showView('pedidos')" data-view="pedidos">
+        <span class="icon">🛒</span><span>Pedidos</span>
+      </button>
+      <button class="nav-item" onclick="showView('clientes')" data-view="clientes">
+        <span class="icon">👥</span><span>Clientes</span>
+      </button>
+      <button class="nav-item" onclick="showView('resenias')" data-view="resenias">
+        <span class="icon">⭐</span><span>Reseñas</span>
+      </button>
+      <button class="nav-item" onclick="showView('tiendas')" data-view="tiendas">
+        <span class="icon">🏪</span><span>Tiendas</span>
+      </button>
+    </nav>
+    <div class="sidebar-footer">
+      <button class="btn-logout" onclick="logout()"><span>Cerrar sesión</span></button>
+      <a class="nav-item" href="index.html" style="margin-top:auto;">
+        <span class="icon">🏠</span><span>Volver a la web</span>
+      </a>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <main class="main">
+
+    <div class="topbar">
+      <h1 id="viewTitle">Resumen General</h1>
+      <div class="topbar-actions">
+        <button class="btn-sm btn-outline" onclick="loadData()">↻ Actualizar</button>
+        <button class="btn-sm btn-primary-sm" onclick="exportCSV()">⬇ Exportar CSV</button>
+      </div>
+    </div>
+
+    <!-- ════ VIEW: OVERVIEW ════ -->
+    <div id="view-overview" class="view active">
+
+      <!-- KPIs -->
+      <div class="kpi-grid" id="kpiGrid">
+        <div class="kpi-card yellow">
+          <span class="kpi-icon">🔧</span>
+          <div class="kpi-label">Total Reservas</div>
+          <div class="kpi-value" id="kpiTotalReservas">0</div>
+          <div class="kpi-sub" id="kpiReservasSub">—</div>
+        </div>
+        <div class="kpi-card cyan">
+          <span class="kpi-icon">👥</span>
+          <div class="kpi-label">Clientes Registrados</div>
+          <div class="kpi-value" id="kpiClientes">0</div>
+          <div class="kpi-sub" id="kpiClientesSub">—</div>
+        </div>
+        <div class="kpi-card purple">
+          <span class="kpi-icon">💰</span>
+          <div class="kpi-label">Ingresos Estimados</div>
+          <div class="kpi-value" id="kpiIngresos">0€</div>
+          <div class="kpi-sub">basado en servicios</div>
+        </div>
+        <div class="kpi-card pink">
+          <span class="kpi-icon">⚡</span>
+          <div class="kpi-label">Reparaciones Activas</div>
+          <div class="kpi-value" id="kpiActivas">0</div>
+          <div class="kpi-sub">en curso</div>
+        </div>
+      </div>
+
+      <!-- Gráficas fila 1 -->
+      <div class="charts-row">
+        <div class="chart-card">
+          <div class="chart-title">Reservas por día (últimos 14 días)</div>
+          <svg id="chartBarDias" width="100%" height="200" viewBox="0 0 500 200"></svg>
+        </div>
+        <div class="chart-card">
+          <div class="chart-title">Servicios más solicitados</div>
+          <div style="display:flex; align-items:center; gap:1.5rem;">
+            <svg id="chartDonutServicios" width="150" height="150" viewBox="0 0 150 150"></svg>
+            <div id="legendServicios" style="flex:1; font-size:0.78rem; display:flex; flex-direction:column; gap:0.5rem;"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Gráficas fila 2 -->
+      <div class="charts-row">
+        <div class="chart-card">
+          <div class="chart-title">Reservas por tienda</div>
+          <div style="display:flex; align-items:center; gap:1.5rem;">
+            <svg id="chartDonutTiendas" width="150" height="150" viewBox="0 0 150 150"></svg>
+            <div id="legendTiendas" style="flex:1; font-size:0.78rem; display:flex; flex-direction:column; gap:0.5rem;"></div>
+          </div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-title">Estado de reparaciones</div>
+          <svg id="chartBarEstados" width="100%" height="200" viewBox="0 0 500 200"></svg>
+        </div>
+      </div>
+
+      <!-- Últimas reservas -->
+      <div class="table-card">
+        <div class="table-header">
+          <div class="table-title">Últimas reservas</div>
+        </div>
+        <div id="tableOverviewContent"></div>
+      </div>
+    </div>
+
+    <!-- ════ VIEW: RESERVAS ════ -->
+    <div id="view-reservas" class="view">
+      <div class="table-card">
+        <div class="table-header">
+          <div class="table-title">Todas las reservas</div>
+          <input class="search-input" type="text" id="searchReservas"
+            placeholder="🔍  Buscar ticket, email..." oninput="renderTablaReservas()">
+        </div>
+        <div id="tablaReservasContent"></div>
+        <div class="pagination" id="paginationReservas"></div>
+      </div>
+    </div>
+
+    <!-- ════ VIEW: PEDIDOS ════ -->
+    <div id="view-pedidos" class="view">
+      <div class="table-card">
+        <div class="table-header">
+          <div class="table-title">Gestión de Pedidos</div>
+          <input class="search-input" type="text" id="searchPedidos"
+            placeholder="🔍  Buscar pedido, cliente..." oninput="renderTablaPedidos()">
+        </div>
+        <div id="tablaPedidosContent"></div>
+        <div class="pagination" id="paginationPedidos"></div>
+      </div>
+    </div>
+
+    <!-- ════ VIEW: CLIENTES ════ -->
+    <div id="view-clientes" class="view">
+      <div class="table-card">
+        <div class="table-header">
+          <div class="table-title">Clientes registrados</div>
+          <input class="search-input" type="text" id="searchClientes"
+            placeholder="🔍  Buscar..." oninput="renderClientes()">
+        </div>
+        <div id="clientesContent"></div>
+      </div>
+    </div>
+
+    <!-- ════ VIEW: RESEÑAS ════ -->
+    <div id="view-resenias" class="view">
+      <div class="charts-row">
+        <div class="kpi-card yellow"><span class="kpi-icon">⭐</span><div class="kpi-label">Total Reseñas</div><div class="kpi-value" id="kpiResenias">0</div><div class="kpi-sub" id="kpiReseniasAvg">—</div></div>
+        <div class="kpi-card cyan"><span class="kpi-icon">📊</span><div class="kpi-label">NPS Medio</div><div class="kpi-value" id="kpiNPS">—</div><div class="kpi-sub">de 10</div></div>
+      </div>
+      <div class="table-card">
+        <div class="table-header">
+          <div class="table-title">Todas las reseñas</div>
+          <input class="search-input" type="text" id="searchResenias" placeholder="🔍  Buscar nombre, tienda..." oninput="renderResenias()">
+        </div>
+        <div id="reseniasContent"></div>
+      </div>
+    </div>
+
+    <!-- ════ VIEW: TIENDAS ════ -->
+    <div id="view-tiendas" class="view">
+      <div class="charts-row-3" id="tiendaCards"></div>
+    </div>
+
+  </main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="assets/js/supabase-config.js"></script>
+<script src="assets/js/supabase-db.js"></script>
+<script>
+// ─────────────────────────────────────────────────
+//  CONFIG
+// ─────────────────────────────────────────────────
+const ADMIN_EMAIL_HASH = "Zml4bGFiY3lsQGdtYWlsLmNvbQ=="; // b64
+const ADMIN_PASS_HASH  = "VmxgeWtoYzY4Xzk="; // hash custom de FixLabDB
+
+const ADMIN_KEY   = 'fixlab_admin_session';
+
+const DB_KEYS = {
+  USERS:        'fixlab_db_users',
+  RESERVATIONS: 'fixlab_db_reservations',
+  SESSION:      'fixlab_db_session',
+  REVIEWS:      'fixlabReviews',
+};
+
+// Precios estimados por tipo de servicio (para calcular ingresos)
+const PRECIO_BASE = {
+  pantalla: 75, bateria: 55, camara: 60, agua: 65,
+  conector: 50, botones: 45, altavoz: 40, microfono: 40,
+};
+
+const TIENDAS = ['Centro', 'Río Shopping', 'Burgos'];
+
+const COLORES = {
+  yellow: '#F5E642', purple: '#B44DFF',
+  cyan: '#00E5FF', pink: '#FF2D78',
+  green: '#39FF14', orange: '#FF8C00',
+};
+
+const ESTADO_COLORS = {
+  'solicitud recibida': COLORES.purple,
+  'en diagnóstico':     COLORES.cyan,
+  'reparando':          COLORES.yellow,
+  'listo para recoger': COLORES.green,
+  'entregado':          '#6677AA',
+};
+
+// Paginación
+let paginaActual = 1;
+const POR_PAGINA = 10;
+
+// ─────────────────────────────────────────────────
+//  DB HELPERS
+// ─────────────────────────────────────────────────
+function _decrypt(str) {
+  try {
+    const decoded = atob(str);
+    let res = "";
+    for (let i = 0; i < decoded.length; i++) {
+      res += String.fromCharCode(decoded.charCodeAt(i) ^ 0x0F);
+    }
+    return JSON.parse(res);
+  } catch (e) { return null; }
+}
+
+function getCollection(key) {
+  return window.FixLabSupabaseDB ? window.FixLabSupabaseDB.getCollectionSync(key) : [];
+}
+
+function _encrypt(data) {
+  try {
+    const str = JSON.stringify(data);
+    let res = "";
+    for (let i = 0; i < str.length; i++) {
+      res += String.fromCharCode(str.charCodeAt(i) ^ 0x0F);
+    }
+    return btoa(res);
+  } catch (e) { return ""; }
+}
+
+function saveCollection(key, data) {
+  return window.FixLabSupabaseDB ? window.FixLabSupabaseDB.saveCollection(key, data) : Promise.resolve(false);
+}
+
+function normalizeReservation(r) {
+  if (!r._id) {
+    r._id = 'fl_' + (r.orderNumber || r.code || Date.now()) + '_' + Math.random().toString(36).slice(2, 8);
+  }
+  if (!r.orderNumber && r.code) {
+    r.orderNumber = r.code;
+  }
+  if (!r.createdAt && r.date) {
+    r.createdAt = r.date;
+  }
+  return r;
+}
+
+function getReservationDate(r) {
+  const rawDate = r.createdAt || r.date || null;
+  const date = rawDate ? new Date(rawDate) : null;
+  return date instanceof Date && !isNaN(date) ? date : null;
+}
+
+function formatReservationDate(r) {
+  const date = getReservationDate(r);
+  return date ? date.toLocaleDateString('es-ES', {
+    day: '2-digit', month: '2-digit', year: 'numeric'
+  }) : '—';
+}
+
+function getReservationTicket(r) {
+  return r.orderNumber || r.code || '—';
+}
+
+function normalizeTicket(value) {
+  return (value || '').toString().replace('#', '').trim().toUpperCase();
+}
+
+function getReservationIdentity(r) {
+  return normalizeTicket(r.orderNumber || r.code || r._id);
+}
+
+function syncPublicReservationStatus(reservation) {
+  return window.FixLabSupabaseDB
+    ? window.FixLabSupabaseDB.upsertOne(DB_KEYS.RESERVATIONS, reservation)
+    : Promise.resolve(reservation);
+}
+
+function loadReservations() {
+  const raw = getCollection(DB_KEYS.RESERVATIONS);
+  const normalized = raw.map(normalizeReservation);
+  if (JSON.stringify(normalized) !== JSON.stringify(raw)) {
+    saveCollection(DB_KEYS.RESERVATIONS, normalized);
+  }
+  return normalized;
+}
+
+// ─────────────────────────────────────────────────
+//  LOGIN
+// ─────────────────────────────────────────────────
+function handleLogin() {
+  const u = document.getElementById('adminUser').value.trim().toLowerCase();
+  const p = document.getElementById('adminPass').value;
+  const err = document.getElementById('loginError');
+  const validUser = u === ADMIN_USER || u === ADMIN_EMAIL;
+
+  if (validUser && p === ADMIN_PASS) {
+    sessionStorage.setItem(ADMIN_KEY, 'true');
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('appShell').style.display = 'block';
+    loadData();
+  } else {
+    err.textContent = 'Usuario o contraseña incorrectos';
+  }
+}
+
+async function resetFixLabData() {
+  const ok = window.confirm('Esto borrará los datos de FixLab en Supabase. ¿Continuar?');
+  if (!ok) return;
+
+  await saveCollection(DB_KEYS.USERS, []);
+  await saveCollection(DB_KEYS.RESERVATIONS, []);
+  await saveCollection(DB_KEYS.REVIEWS, []);
+  sessionStorage.removeItem(ADMIN_KEY);
+
+  alert('Datos de FixLab borrados. La página se recargará.');
+  location.reload();
+}
+
+function logout() {
+  sessionStorage.removeItem(ADMIN_KEY);
+  location.reload();
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && document.getElementById('loginScreen').style.display !== 'none') {
+    handleLogin();
+  }
+});
+
+// Botón oculto para desarrollo:
+// - Visible con ?dev=1
+// - O con atajo: Ctrl + Alt + R
+const devResetBtn = document.getElementById('devResetBtn');
+const devMode = new URLSearchParams(window.location.search).get('dev') === '1';
+if (devResetBtn && devMode) {
+  devResetBtn.style.display = 'block';
+}
+
+document.addEventListener('keydown', (e) => {
+  if (e.ctrlKey && e.altKey && e.key.toLowerCase() === 'r' && devResetBtn) {
+    devResetBtn.style.display = 'block';
+  }
+});
+
+// Auto-login si sesión activa
+if (sessionStorage.getItem(ADMIN_KEY) === 'true') {
+  document.getElementById('loginScreen').style.display = 'none';
+  document.getElementById('appShell').style.display = 'block';
+}
+
+// ─────────────────────────────────────────────────
+//  NAVEGACIÓN
+// ─────────────────────────────────────────────────
+const TITLES = {
+  overview:  'Resumen General',
+  reservas:  'Gestión de Reservas',
+  pedidos:   'Gestión de Pedidos',
+  clientes:  'Clientes',
+  resenias:  'Reseñas de Clientes',
+  tiendas:   'Estadísticas por Tienda',
+};
+
+function showView(name) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('view-' + name).classList.add('active');
+  document.querySelector(`[data-view="${name}"]`).classList.add('active');
+  document.getElementById('viewTitle').textContent = TITLES[name];
+
+  if (name === 'reservas')  renderTablaReservas();
+  if (name === 'pedidos')   renderTablaPedidos();
+  if (name === 'clientes')  renderClientes();
+  if (name === 'resenias')  renderResenias();
+  if (name === 'tiendas')   renderTiendas();
+}
+
+// ... 
+
+function renderTablaPedidos() {
+  const q = (document.getElementById('searchPedidos')?.value || '').toLowerCase();
+  let r = loadReservations().filter(x => x.type === 'PRODUCT_ORDER');
+
+  if (q) {
+    r = r.filter(x =>
+      (x.orderNumber||'').toLowerCase().includes(q) ||
+      (x.customerName||'').toLowerCase().includes(q) ||
+      (x.productName||'').toLowerCase().includes(q)
+    );
+  }
+
+  const el = document.getElementById('tablaPedidosContent');
+  if (!el) return;
+
+  const total = r.length;
+  const paginas = Math.ceil(total / POR_PAGINA);
+  const inicio = (paginaActual - 1) * POR_PAGINA;
+  const fin = inicio + POR_PAGINA;
+  const pageData = r.slice(inicio, fin);
+
+  el.innerHTML = buildTablaPedidosHTML(pageData);
+  // Reutilizar pagination
+}
+
+function buildTablaPedidosHTML(pedidos) {
+  if (pedidos.length === 0) return '<div class="empty">📭 No hay pedidos</div>';
+  
+  let rows = pedidos.map(p => {
+    const fecha = formatReservationDate(p);
+    return `
+      <tr>
+        <td class="font-mono" style="color:var(--neon-cyan)">#${p.orderNumber}</td>
+        <td>
+          <div style="font-weight:600">${p.customerName}</div>
+          <div style="font-size:0.75rem; color:var(--muted)">${p.customerEmail}</div>
+        </td>
+        <td>${p.productName}</td>
+        <td>${p.total}€</td>
+        <td><span class="badge" style="background:rgba(0,229,255,0.1); color:var(--neon-cyan)">${p.status}</span></td>
+        <td>${fecha}</td>
+        <td>
+          <button class="btn-icon" title="Ver dirección" onclick="alert('Dirección: ${p.address}')">📍</button>
+        </td>
+      </tr>
+    `;
+  }).join('');
+
+  return '<table><thead><tr>' +
+    '<th>ID</th><th>Cliente</th><th>Producto</th><th>Total</th><th>Estado</th><th>Fecha</th><th>Acciones</th>' +
+    '</tr></thead><tbody>' + rows + '</tbody></table>';
+}
+
+// ─────────────────────────────────────────────────
+//  DATOS DEMO
+// ─────────────────────────────────────────────────
+function generarDemoData() {
+  if (getCollection(DB_KEYS.RESERVATIONS).length > 0) return;
+
+  const nombres = ['Carlos García','María López','Andrés Ruiz','Lucía Fernández','Pablo Martín','Sara Jiménez','David Sánchez','Elena Torres','Javier Moreno','Ana Díaz','Raúl Hernández','Laura Navarro'];
+  const servicios = ['Reparación de pantalla','Cambio de batería','Reparación de cámara','Daño por agua','Conector de carga'];
+  const estados = ['Solicitud recibida','En diagnóstico','Reparando','Listo para recoger','Entregado'];
+  const modelos = ['iPhone 14 Pro','iPhone 13','Samsung Galaxy S23','Samsung Galaxy A54','Xiaomi Redmi Note 13','iPhone 15','Samsung Galaxy S24','Xiaomi 13T'];
+
+  // Usuarios
+  const users = nombres.map((n, i) => {
+    const email = n.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/ /g,'.') + '@gmail.com';
+    const d = new Date(); d.setDate(d.getDate() - Math.floor(Math.random() * 30));
+    return { _id: 'demo_u' + i, email, name: n, passwordHash: 'demo', createdAt: d.toISOString() };
+  });
+  saveCollection(DB_KEYS.USERS, users);
+
+  // Reservas
+  const reservas = [];
+  for (let i = 0; i < 18; i++) {
+    const u = users[i % users.length];
+    const d = new Date(); d.setDate(d.getDate() - Math.floor(Math.random() * 14));
+    d.setHours(9 + Math.floor(Math.random() * 10), Math.floor(Math.random() * 60));
+    const svc = servicios[Math.floor(Math.random() * servicios.length)];
+    const store = TIENDAS[Math.floor(Math.random() * TIENDAS.length)];
+    const status = estados[Math.floor(Math.random() * estados.length)];
+    const model = modelos[Math.floor(Math.random() * modelos.length)];
+    reservas.push({
+      _id: 'demo_r' + i,
+      orderNumber: 'FL-2026-' + (1000 + i),
+      email: u.email,
+      phone: '6' + String(Math.floor(10000000 + Math.random() * 90000000)),
+      service: svc + ' · ' + model,
+      store: store,
+      status: status,
+      createdAt: d.toISOString()
+    });
+  }
+  saveCollection(DB_KEYS.RESERVATIONS, reservas);
+
+  // Reseñas
+  const comentarios = [
+    'Muy rápido y profesional, mi móvil quedó como nuevo.',
+    'Buen precio y la reparación fue en menos de una hora.',
+    'Excelente atención al cliente, muy amables.',
+    'La pantalla quedó perfecta, se nota calidad.',
+    'Tuve que esperar un poco pero el resultado merece la pena.',
+    'Servicio impecable, lo recomiendo sin duda.',
+    'Reparación rápida y con garantía, muy contento.',
+    'El mejor servicio de reparación que he probado en Valladolid.'
+  ];
+  const tiendaReview = ['FixLab Río Shopping','FixLab Centro (Calle Acibelas, 9)','FixLab Burgos (Calle Santiago Apóstol, 31)'];
+  const svcReview = ['Reparación de pantalla','Cambio de batería','Reparación de cámara','Reparación de conector de carga','Diagnóstico gratuito'];
+  const reviews = [];
+  for (let i = 0; i < 8; i++) {
+    const d = new Date(); d.setDate(d.getDate() - Math.floor(Math.random() * 20));
+    reviews.push({
+      name: nombres[i],
+      store: tiendaReview[i % tiendaReview.length],
+      service: svcReview[i % svcReview.length],
+      rating: String(4 + Math.floor(Math.random() * 2)),
+      aspects: ['rapidez','calidad','atencion'][Math.floor(Math.random()*3)],
+      nps: String(7 + Math.floor(Math.random() * 4)),
+      comment: comentarios[i],
+      date: d.toLocaleDateString('es-ES')
+    });
+  }
+  saveCollection(DB_KEYS.REVIEWS, reviews);
+}
+
+// ─────────────────────────────────────────────────
+//  CARGA PRINCIPAL
+// ─────────────────────────────────────────────────
+async function loadData() {
+  if (window.FixLabSupabaseDB) {
+    await window.FixLabSupabaseDB.loadAll(Object.values(DB_KEYS));
+  }
+  const reservas = loadReservations();
+  const users    = getCollection(DB_KEYS.USERS);
+  renderKPIs(reservas, users);
+  renderChartDias(reservas);
+  renderDonutServicios(reservas);
+  renderDonutTiendas(reservas);
+  renderChartEstados(reservas);
+  renderTablaOverview(reservas);
+}
+
+// ─────────────────────────────────────────────────
+//  KPIs
+// ─────────────────────────────────────────────────
+function renderKPIs(reservas, users) {
+  document.getElementById('kpiTotalReservas').textContent = reservas.length;
+  const hoy = new Date().toDateString();
+  const hoyCount = reservas.filter(r => {
+    const date = getReservationDate(r);
+    return date ? date.toDateString() === hoy : false;
+  }).length;
+  document.getElementById('kpiReservasSub').textContent =
+    hoyCount > 0 ? `+${hoyCount} hoy` : 'ninguna hoy';
+
+  document.getElementById('kpiClientes').textContent = users.length;
+  document.getElementById('kpiClientesSub').textContent =
+    `${new Set(reservas.map(r => r.email)).size} con reserva`;
+
+  // Ingresos estimados
+  let total = 0;
+  reservas.forEach(r => {
+    const s = (r.service || '').toLowerCase();
+    let precio = 55;
+    if (s.includes('pantalla')) precio = PRECIO_BASE.pantalla;
+    else if (s.includes('bater')) precio = PRECIO_BASE.bateria;
+    else if (s.includes('cám') || s.includes('cam')) precio = PRECIO_BASE.camara;
+    else if (s.includes('agua')) precio = PRECIO_BASE.agua;
+    else if (s.includes('conect')) precio = PRECIO_BASE.conector;
+    total += precio;
+  });
+  document.getElementById('kpiIngresos').textContent =
+    total.toLocaleString('es-ES') + '€';
+
+  const activas = reservas.filter(r => {
+    const st = (r.status || '').toLowerCase();
+    return !st.includes('entregado') && !st.includes('cancelado');
+  }).length;
+  document.getElementById('kpiActivas').textContent = activas;
+}
+
+// ─────────────────────────────────────────────────
+//  CHART: BARRAS DÍAS
+// ─────────────────────────────────────────────────
+function renderChartDias(reservas) {
+  const svg = document.getElementById('chartBarDias');
+  if (!svg) return;
+
+  const W = 500, H = 200, pad = { t:10, r:10, b:35, l:35 };
+  const dias = [];
+  for (let i = 13; i >= 0; i--) {
+    const d = new Date(); d.setDate(d.getDate() - i);
+    dias.push({ label: `${d.getDate()}/${d.getMonth()+1}`, date: d.toDateString(), count: 0 });
+  }
+  reservas.forEach(r => {
+    const date = getReservationDate(r);
+    const ds = date ? date.toDateString() : '';
+    const d = dias.find(x => x.date === ds);
+    if (d) d.count++;
+  });
+
+  const maxVal = Math.max(...dias.map(d => d.count), 1);
+  const cW = (W - pad.l - pad.r) / dias.length;
+  const cH = H - pad.t - pad.b;
+
+  let html = '';
+
+  // Grid lines
+  for (let i = 0; i <= 4; i++) {
+    const y = pad.t + cH - (i / 4) * cH;
+    const val = Math.round((i / 4) * maxVal);
+    html += `<line x1="${pad.l}" y1="${y}" x2="${W - pad.r}" y2="${y}"
+      stroke="rgba(180,77,255,0.1)" stroke-width="1"/>`;
+    html += `<text x="${pad.l - 5}" y="${y + 4}" text-anchor="end"
+      fill="#6677aa" font-size="9" font-family="Share Tech Mono">${val}</text>`;
+  }
+
+  // Barras
+  dias.forEach((d, i) => {
+    const bH = d.count === 0 ? 2 : (d.count / maxVal) * cH;
+    const x  = pad.l + i * cW + cW * 0.15;
+    const y  = pad.t + cH - bH;
+    const bW = cW * 0.7;
+    const alpha = 0.5 + 0.5 * (d.count / maxVal);
+
+    html += `
+      <rect x="${x}" y="${y}" width="${bW}" height="${bH}" rx="3"
+        fill="${COLORES.yellow}" opacity="${alpha}"/>
+      <rect x="${x}" y="${y}" width="${bW}" height="3" rx="1"
+        fill="${COLORES.yellow}" opacity="0.9"/>`;
+
+    // Etiqueta X (cada 2)
+    if (i % 2 === 0) {
+      html += `<text x="${x + bW/2}" y="${H - 8}" text-anchor="middle"
+        fill="#6677aa" font-size="8.5" font-family="Share Tech Mono">${d.label}</text>`;
+    }
+    if (d.count > 0) {
+      html += `<text x="${x + bW/2}" y="${y - 4}" text-anchor="middle"
+        fill="${COLORES.yellow}" font-size="9" font-weight="bold"
+        font-family="Orbitron">${d.count}</text>`;
+    }
+  });
+
+  svg.innerHTML = html;
+}
+
+// ─────────────────────────────────────────────────
+//  CHART: DONUT SERVICIOS
+// ─────────────────────────────────────────────────
+function renderDonutServicios(reservas) {
+  const svg    = document.getElementById('chartDonutServicios');
+  const legend = document.getElementById('legendServicios');
+  if (!svg || !legend) return;
+
+  const counts = {};
+  reservas.forEach(r => {
+    const s = (r.service || '').toLowerCase();
+    let tipo = 'Otros';
+    if (s.includes('pantalla')) tipo = 'Pantalla';
+    else if (s.includes('bater')) tipo = 'Batería';
+    else if (s.includes('cám') || s.includes('cam')) tipo = 'Cámara';
+    else if (s.includes('agua')) tipo = 'Agua';
+    else if (s.includes('conect')) tipo = 'Conector';
+    counts[tipo] = (counts[tipo] || 0) + 1;
+  });
+
+  const cols = [COLORES.yellow, COLORES.cyan, COLORES.purple, COLORES.pink, COLORES.green, COLORES.orange];
+  drawDonut(svg, legend, counts, cols, 75, 75, 50, 30);
+}
+
+function renderDonutTiendas(reservas) {
+  const svg    = document.getElementById('chartDonutTiendas');
+  const legend = document.getElementById('legendTiendas');
+  if (!svg || !legend) return;
+
+  const counts = {};
+  TIENDAS.forEach(t => counts[t] = 0);
+  reservas.forEach(r => {
+    const t = r.store || 'Otras';
+    counts[t] = (counts[t] || 0) + 1;
+  });
+
+  const cols = [COLORES.cyan, COLORES.purple, COLORES.yellow];
+  drawDonut(svg, legend, counts, cols, 75, 75, 50, 30);
+}
+
+function drawDonut(svg, legend, counts, colors, cx, cy, r, ri) {
+  const entries = Object.entries(counts).filter(([,v]) => v > 0);
+  if (entries.length === 0) { svg.innerHTML = ''; legend.innerHTML = ''; return; }
+
+  const total = entries.reduce((s, [,v]) => s + v, 0);
+  let angle = -Math.PI / 2;
+  let html = '';
+
+  entries.forEach(([label, val], i) => {
+    const slice = (val / total) * 2 * Math.PI;
+    const x1 = cx + r * Math.cos(angle);
+    const y1 = cy + r * Math.sin(angle);
+    const x2 = cx + r * Math.cos(angle + slice);
+    const y2 = cy + r * Math.sin(angle + slice);
+    const xi1 = cx + ri * Math.cos(angle);
+    const yi1 = cy + ri * Math.sin(angle);
+    const xi2 = cx + ri * Math.cos(angle + slice);
+    const yi2 = cy + ri * Math.sin(angle + slice);
+    const large = slice > Math.PI ? 1 : 0;
+    const col = colors[i % colors.length];
+
+    html += `<path d="M ${xi1} ${yi1} L ${x1} ${y1}
+      A ${r} ${r} 0 ${large} 1 ${x2} ${y2}
+      L ${xi2} ${yi2} A ${ri} ${ri} 0 ${large} 0 ${xi1} ${yi1} Z"
+      fill="${col}" opacity="0.85" stroke="var(--bg)" stroke-width="2"/>`;
+
+    angle += slice;
+  });
+
+  // Centro texto
+  html += `<text x="${cx}" y="${cy - 5}" text-anchor="middle"
+    fill="white" font-size="18" font-family="Orbitron" font-weight="900">${total}</text>`;
+  html += `<text x="${cx}" y="${cy + 12}" text-anchor="middle"
+    fill="#6677aa" font-size="8" font-family="Share Tech Mono">total</text>`;
+
+  svg.innerHTML = html;
+
+  legend.innerHTML = entries.map(([label, val], i) => `
+    <div style="display:flex; align-items:center; gap:0.5rem;">
+      <span style="width:10px; height:10px; border-radius:2px; background:${colors[i % colors.length]}; flex-shrink:0;"></span>
+      <span style="color:var(--text);">${label}</span>
+      <span style="margin-left:auto; color:${colors[i % colors.length]}; font-family:'Share Tech Mono'; font-weight:700;">${val}</span>
+    </div>
+  `).join('');
+}
+
+// ─────────────────────────────────────────────────
+//  CHART: BARRAS ESTADOS
+// ─────────────────────────────────────────────────
+function renderChartEstados(reservas) {
+  const svg = document.getElementById('chartBarEstados');
+  if (!svg) return;
+
+  const estados = ['Solicitud recibida','En diagnóstico','Reparando','Listo para recoger','Entregado'];
+  const counts = {};
+  estados.forEach(e => counts[e] = 0);
+  reservas.forEach(r => {
+    const s = capitalize(r.status || 'Solicitud recibida');
+    const match = estados.find(e => e.toLowerCase() === s.toLowerCase());
+    if (match) counts[match]++;
+    else counts['Solicitud recibida']++;
+  });
+
+  const W = 500, H = 200, pad = { t:15, r:10, b:55, l:35 };
+  const cH = H - pad.t - pad.b;
+  const cW = (W - pad.l - pad.r) / estados.length;
+  const maxVal = Math.max(...Object.values(counts), 1);
+
+  let html = '';
+  for (let i = 0; i <= 4; i++) {
+    const y = pad.t + cH - (i/4) * cH;
+    html += `<line x1="${pad.l}" y1="${y}" x2="${W-pad.r}" y2="${y}"
+      stroke="rgba(180,77,255,0.1)" stroke-width="1"/>`;
+    html += `<text x="${pad.l-5}" y="${y+4}" text-anchor="end"
+      fill="#6677aa" font-size="9" font-family="Share Tech Mono">${Math.round(i/4*maxVal)}</text>`;
+  }
+
+  estados.forEach((est, i) => {
+    const val = counts[est];
+    const bH  = val === 0 ? 2 : (val / maxVal) * cH;
+    const x   = pad.l + i * cW + cW * 0.15;
+    const y   = pad.t + cH - bH;
+    const bW  = cW * 0.7;
+    const col = ESTADO_COLORS[est.toLowerCase()] || COLORES.purple;
+
+    html += `<rect x="${x}" y="${y}" width="${bW}" height="${bH}" rx="3"
+      fill="${col}" opacity="0.75"/>
+      <rect x="${x}" y="${y}" width="${bW}" height="3" rx="1" fill="${col}"/>`;
+
+    if (val > 0) {
+      html += `<text x="${x+bW/2}" y="${y-4}" text-anchor="middle"
+        fill="${col}" font-size="9" font-weight="bold" font-family="Orbitron">${val}</text>`;
+    }
+
+    const words = est.split(' ');
+    words.forEach((w, wi) => {
+      html += `<text x="${x+bW/2}" y="${H - pad.b + 14 + wi * 11}"
+        text-anchor="middle" fill="#6677aa" font-size="8" font-family="Share Tech Mono">${w}</text>`;
+    });
+  });
+
+  svg.innerHTML = html;
+}
+
+// ─────────────────────────────────────────────────
+//  TABLA OVERVIEW (últimas 5)
+// ─────────────────────────────────────────────────
+function renderTablaOverview(reservas) {
+  const el = document.getElementById('tableOverviewContent');
+  if (!el) return;
+  const ultimas = [...reservas].sort((a,b) => {
+    const da = getReservationDate(a);
+    const db = getReservationDate(b);
+    return (db ? db.getTime() : 0) - (da ? da.getTime() : 0);
+  }).slice(0, 5);
+  el.innerHTML = buildTablaHTML(ultimas, false);
+}
+
+// ─────────────────────────────────────────────────
+//  TABLA COMPLETA RESERVAS
+// ─────────────────────────────────────────────────
+function renderTablaReservas() {
+  const q = (document.getElementById('searchReservas')?.value || '').toLowerCase();
+  let reservas = loadReservations();
+  if (q) reservas = reservas.filter(r =>
+    (getReservationTicket(r) || '').toLowerCase().includes(q) ||
+    (r.email||'').toLowerCase().includes(q) ||
+    (r.service||'').toLowerCase().includes(q) ||
+    (r.store||'').toLowerCase().includes(q)
+  );
+  reservas.sort((a,b) => {
+    const da = getReservationDate(a);
+    const db = getReservationDate(b);
+    return (db ? db.getTime() : 0) - (da ? da.getTime() : 0);
+  });
+
+  const total = reservas.length;
+  const paginas = Math.ceil(total / POR_PAGINA);
+  if (paginaActual > paginas) paginaActual = 1;
+
+  const slice = reservas.slice((paginaActual - 1) * POR_PAGINA, paginaActual * POR_PAGINA);
+  const el = document.getElementById('tablaReservasContent');
+  if (el) el.innerHTML = buildTablaHTML(slice, true);
+
+  // Paginación
+  const pel = document.getElementById('paginationReservas');
+  if (pel) {
+    if (paginas <= 1) { pel.innerHTML = ''; return; }
+    let html = '';
+    for (let i = 1; i <= paginas; i++) {
+      html += `<button class="page-btn ${i === paginaActual ? 'active' : ''}"
+        onclick="paginaActual=${i}; renderTablaReservas();">${i}</button>`;
+    }
+    pel.innerHTML = html;
+  }
+}
+
+function buildTablaHTML(reservas, editable) {
+  if (reservas.length === 0) return `
+    <div class="empty-state">
+      <div class="empty-icon">📭</div>
+      <p>No hay reservas que mostrar</p>
+    </div>`;
+
+  const rows = reservas.map((r, rowIndex) => {
+    const fecha = formatReservationDate(r);
+    const svc = (r.service||'').split('·')[0].trim() || 'Servicio';
+    const badge = buildBadge(r.status || 'Solicitud recibida');
+
+    let statusCell = badge;
+    if (editable) {
+      const estados = ['Solicitud recibida','En diagnóstico','Reparando','Listo para recoger','Entregado'];
+      const opts = estados.map(e =>
+        `<option value="${e}" ${(r.status||'').toLowerCase() === e.toLowerCase() ? 'selected' : ''}>${e}</option>`
+      ).join('');
+      const selectId = `statusSelect_${rowIndex}`;
+      statusCell = `<div class="status-actions">
+        <select id="${selectId}" class="status-select">${opts}</select>
+        <button type="button" class="status-accept-btn" onclick="confirmStatus('${getReservationIdentity(r)}', '${selectId}')">Aceptar</button>
+      </div>`;
+    }
+
+    return `<tr>
+      <td class="mono" style="color:var(--neon-yellow)">${getReservationTicket(r)}</td>
+      <td>${r.email || '—'}</td>
+      <td>${svc}</td>
+      <td class="muted">${r.store || '—'}</td>
+      <td>${statusCell}</td>
+      <td class="muted mono">${fecha}</td>
+    </tr>`;
+  }).join('');
+
+  return `<table>
+    <thead><tr>
+      <th>Ticket</th><th>Email</th><th>Servicio</th>
+      <th>Tienda</th><th>Estado</th><th>Fecha</th>
+    </tr></thead>
+    <tbody>${rows}</tbody>
+  </table>`;
+}
+
+function buildBadge(status) {
+  const s = (status || '').toLowerCase();
+  let cls = 'badge-recibida', label = status;
+  if (s.includes('diagnó') || s.includes('diagno')) cls = 'badge-diagnostico';
+  else if (s.includes('reparando')) cls = 'badge-reparando';
+  else if (s.includes('listo'))     cls = 'badge-listo';
+  else if (s.includes('entregado')) cls = 'badge-entregado';
+  return `<span class="badge ${cls}"><span class="badge-dot"></span>${label}</span>`;
+}
+
+async function updateStatus(id, newStatus) {
+  const reservas = getCollection(DB_KEYS.RESERVATIONS);
+  const normalizedId = normalizeTicket(id);
+  const idx = reservas.findIndex(r => {
+    const ticket = normalizeTicket(r.orderNumber || r.code);
+    const internalId = normalizeTicket(r._id);
+    return ticket === normalizedId || internalId === normalizedId;
+  });
+  if (idx >= 0) {
+    reservas[idx].status = newStatus;
+    reservas[idx].updatedAt = new Date().toISOString();
+    saveCollection(DB_KEYS.RESERVATIONS, reservas);
+    syncPublicReservationStatus(reservas[idx]);
+    loadData();
+    return true;
+  }
+  return false;
+}
+
+async function confirmStatus(id, selectId) {
+  const select = document.getElementById(selectId);
+  if (!select) return;
+
+  const ok = await updateStatus(id, select.value);
+  if (ok) {
+    alert('Estado actualizado y sincronizado con el seguimiento.');
+  } else {
+    alert('No se pudo actualizar el estado. Recarga el panel e inténtalo de nuevo.');
+  }
+}
+
+// ─────────────────────────────────────────────────
+//  CLIENTES
+// ─────────────────────────────────────────────────
+function renderClientes() {
+  const q = (document.getElementById('searchClientes')?.value || '').toLowerCase();
+  let users = getCollection(DB_KEYS.USERS);
+  if (q) users = users.filter(u => (u.email||'').toLowerCase().includes(q));
+
+  const el = document.getElementById('clientesContent');
+  if (!el) return;
+
+  if (users.length === 0) {
+    el.innerHTML = `<div class="empty-state">
+      <div class="empty-icon">👥</div><p>No hay clientes registrados aún</p></div>`;
+    return;
+  }
+
+  const reservas = getCollection(DB_KEYS.RESERVATIONS);
+
+  el.innerHTML = `<div class="user-grid">${users.map(u => {
+    const letra = (u.email || '?')[0].toUpperCase();
+    const numRes = reservas.filter(r => r.email === u.email).length;
+    const fecha  = u.createdAt
+      ? new Date(u.createdAt).toLocaleDateString('es-ES') : '—';
+    return `<div class="user-card">
+      <div class="user-avatar">${letra}</div>
+      <div class="user-name">${u.email?.split('@')[0] || '—'}</div>
+      <div class="user-email">${u.email || '—'}</div>
+      <div class="user-meta">${numRes} reserva${numRes !== 1 ? 's' : ''} · Registro: ${fecha}</div>
+    </div>`;
+  }).join('')}</div>`;
+}
+
+// ─────────────────────────────────────────────────
+//  TIENDAS
+// ─────────────────────────────────────────────────
+function renderTiendas() {
+  const reservas = getCollection(DB_KEYS.RESERVATIONS);
+  const el = document.getElementById('tiendaCards');
+  if (!el) return;
+
+  el.innerHTML = TIENDAS.map((tienda, ti) => {
+    const tr = reservas.filter(r => (r.store||'') === tienda);
+    const activas = tr.filter(r => !(r.status||'').toLowerCase().includes('entregado')).length;
+
+    const svcCount = {};
+    tr.forEach(r => {
+      const s = (r.service||'').split('·')[0].trim() || 'Otros';
+      svcCount[s] = (svcCount[s]||0) + 1;
+    });
+    const topSvc = Object.entries(svcCount).sort((a,b) => b[1]-a[1]).slice(0,3);
+
+    const cols = [COLORES.cyan, COLORES.yellow, COLORES.purple];
+    const col  = cols[ti % cols.length];
+
+    return `<div class="chart-card" style="border-top:3px solid ${col}; box-shadow:0 0 20px ${col}22;">
+      <div class="chart-title" style="color:${col}">${tienda.toUpperCase()}</div>
+      <div style="display:flex; gap:1.5rem; margin-bottom:1.2rem;">
+        <div style="text-align:center;">
+          <div style="font-family:Orbitron; font-size:2rem; font-weight:900; color:${col}">${tr.length}</div>
+          <div style="font-size:0.72rem; color:var(--muted); font-family:'Share Tech Mono'">RESERVAS</div>
+        </div>
+        <div style="text-align:center;">
+          <div style="font-family:Orbitron; font-size:2rem; font-weight:900; color:var(--neon-pink)">${activas}</div>
+          <div style="font-size:0.72rem; color:var(--muted); font-family:'Share Tech Mono'">ACTIVAS</div>
+        </div>
+      </div>
+      ${topSvc.length ? `<div style="font-size:0.75rem; color:var(--muted); margin-bottom:0.5rem; font-family:'Share Tech Mono'">TOP SERVICIOS</div>
+      ${topSvc.map(([s,v]) => `
+        <div style="display:flex; justify-content:space-between; margin-bottom:0.4rem;">
+          <span style="font-size:0.82rem;">${s}</span>
+          <span style="font-family:'Share Tech Mono'; color:${col}; font-size:0.82rem;">${v}</span>
+        </div>
+        <div style="height:3px; background:var(--surface-2); border-radius:2px; margin-bottom:0.6rem;">
+          <div style="height:3px; background:${col}; border-radius:2px; width:${Math.round(v/tr.length*100)}%; opacity:0.7;"></div>
+        </div>
+      `).join('')}` : '<div style="color:var(--muted); font-size:0.82rem;">Sin reservas aún</div>'}
+    </div>`;
+  }).join('');
+}
+
+// ─────────────────────────────────────────────────
+//  RESEÑAS
+// ─────────────────────────────────────────────────
+function renderResenias() {
+  const q = (document.getElementById('searchResenias')?.value || '').toLowerCase();
+  let reviews = getCollection(DB_KEYS.REVIEWS);
+  if (q) reviews = reviews.filter(r =>
+    (r.name||'').toLowerCase().includes(q) ||
+    (r.store||'').toLowerCase().includes(q) ||
+    (r.comment||'').toLowerCase().includes(q) ||
+    (r.service||'').toLowerCase().includes(q)
+  );
+
+  const allReviews = getCollection(DB_KEYS.REVIEWS);
+  document.getElementById('kpiResenias').textContent = allReviews.length;
+  if (allReviews.length > 0) {
+    const avg = allReviews.reduce((s,r) => s + (parseInt(r.rating)||0), 0) / allReviews.length;
+    document.getElementById('kpiReseniasAvg').textContent = avg.toFixed(1) + '★ media';
+    const npsVals = allReviews.filter(r => r.nps !== '' && r.nps !== 'No indicado').map(r => parseInt(r.nps));
+    document.getElementById('kpiNPS').textContent = npsVals.length ? (npsVals.reduce((s,v)=>s+v,0)/npsVals.length).toFixed(1) : '—';
+  } else {
+    document.getElementById('kpiReseniasAvg').textContent = 'sin reseñas';
+    document.getElementById('kpiNPS').textContent = '—';
+  }
+
+  const el = document.getElementById('reseniasContent');
+  if (!el) return;
+
+  if (reviews.length === 0) {
+    el.innerHTML = '<div class="empty-state"><div class="empty-icon">⭐</div><p>No hay reseñas aún</p></div>';
+    return;
+  }
+
+  const starsHTML = (n) => {
+    let s = '';
+    for (let i = 0; i < 5; i++) s += i < n ? '★' : '☆';
+    return '<span style="color:var(--neon-yellow);letter-spacing:2px;">' + s + '</span>';
+  };
+
+  const rows = reviews.map((r, idx) => '<tr>' +
+    '<td>' + (r.name || '—') + '</td>' +
+    '<td>' + starsHTML(parseInt(r.rating)||0) + '</td>' +
+    '<td class="muted">' + (r.store || '—') + '</td>' +
+    '<td class="muted">' + (r.service || '—') + '</td>' +
+    '<td style="max-width:220px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + (r.comment || '—') + '</td>' +
+    '<td class="mono" style="color:var(--neon-cyan)">' + (r.nps !== '' && r.nps !== 'No indicado' ? r.nps + '/10' : '—') + '</td>' +
+    '<td class="muted mono">' + (r.date || '—') + '</td>' +
+    '<td><button class="btn-sm btn-outline" style="padding:0.3rem 0.6rem;font-size:0.72rem;" onclick="deleteResenia(' + idx + ')">✕</button></td>' +
+  '</tr>').join('');
+
+  el.innerHTML = '<table><thead><tr>' +
+    '<th>Cliente</th><th>Rating</th><th>Tienda</th><th>Servicio</th><th>Comentario</th><th>NPS</th><th>Fecha</th><th></th>' +
+    '</tr></thead><tbody>' + rows + '</tbody></table>';
+}
+
+function deleteResenia(idx) {
+  if (!confirm('¿Eliminar esta reseña?')) return;
+  const reviews = getCollection(DB_KEYS.REVIEWS);
+  reviews.splice(idx, 1);
+  saveCollection(DB_KEYS.REVIEWS, reviews);
+  renderResenias();
+}
+
+// ─────────────────────────────────────────────────
+//  EXPORT CSV
+// ─────────────────────────────────────────────────
+function exportCSV() {
+  const reservas = getCollection(DB_KEYS.RESERVATIONS);
+  const cols = ['orderNumber','email','phone','service','store','status','createdAt'];
+  const header = cols.join(',');
+  const rows = reservas.map(r =>
+    cols.map(c => `"${(r[c]||'').toString().replace(/"/g,'""')}"`).join(',')
+  );
+  const csv = [header, ...rows].join('\n');
+  const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href = url; a.download = `fixlab_reservas_${new Date().toISOString().slice(0,10)}.csv`;
+  a.click(); URL.revokeObjectURL(url);
+}
+
+// ─────────────────────────────────────────────────
+//  UTILS
+// ─────────────────────────────────────────────────
+function capitalize(s) { return s ? s.charAt(0).toUpperCase() + s.slice(1) : ''; }
+
+// Init
+if (sessionStorage.getItem(ADMIN_KEY) === 'true') loadData();
+
+// Auto-actualización cada 10 segundos
+setInterval(() => {
+  if (sessionStorage.getItem(ADMIN_KEY) === 'true') {
+    loadData();
+  }
+}, 10000);
+
+</script>
+</body>
+</html>

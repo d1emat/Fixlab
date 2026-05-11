@@ -1,0 +1,40 @@
+﻿
+/* Run on reserva.html */
+if (document.getElementById("reservationForm")) {
+  window.addEventListener("DOMContentLoaded", autoFillUserData);
+}
+
+/* Save user phone when registering */
+const enhanceRegistration = () => {
+  const registerForm = document.getElementById("registerForm");
+  if (!registerForm) return;
+
+  registerForm.addEventListener("submit", (event) => {
+    const formData = new FormData(registerForm);
+    const name = (formData.get("name") || "").toString().trim();
+    const email = (formData.get("email") || "").toString().trim().toLowerCase();
+    const password = (formData.get("password") || "").toString().trim();
+
+    if (!name || !email || !password) return;
+
+    const existing = FixLabDB.findOne(FixLabDB.collections.USERS, { email });
+    if (existing) {
+      FixLabDB.updateOne(FixLabDB.collections.USERS, { email }, { $set: { name, passwordHash: FixLabDB.hashPassword(password)   }
+}
+
+// Hacer FixLabDB accesible globalmente
+window.FixLabDB = FixLabDB;
+    } else {
+      FixLabDB.insert(FixLabDB.collections.USERS, {
+        name,
+        email,
+        passwordHash: FixLabDB.hashPassword(password)
+      });
+    }
+  });
+};
+
+document.querySelectorAll("a[href]").forEach((link) => {
+  link.addEventListener("click", (event) => {
+    const href = link.getAttribute("href");
+    if (!href) {
