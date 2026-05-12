@@ -1,6 +1,6 @@
 // script-admin.js - Versión Simple
 
-window.selectPage = function(page) {
+window.selectPage = function (page) {
   const contentFrame = document.getElementById('contentFrame');
   if (contentFrame) {
     contentFrame.src = page;
@@ -24,8 +24,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const pageGridContent = document.getElementById('pageGridContent');
   const toastContainer = document.getElementById('toastContainer');
 
-  const ADMIN_EMAIL = 'fixlabcyl@gmail.com';
-  const ADMIN_PASS = 'Skibidi67';
+  const ADMIN_CREDENTIALS = [
+    { email: 'fixlabcyl@gmail.com', pass: 'Skibidi67' },
+    { email: 'test@gmail.com', pass: 'Fixlab123' }
+  ];
   const SESSION_KEY = 'fixlab_admin_session';
 
   // Toast
@@ -43,7 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
       e.preventDefault();
       const email = (e.target.email.value || '').trim().toLowerCase();
       const pass = e.target.password.value || '';
-      if (email === ADMIN_EMAIL && pass === ADMIN_PASS) {
+      if (ADMIN_CREDENTIALS.some(c => email === c.email && pass === c.pass)) {
         localStorage.setItem(SESSION_KEY, 'true');
         if (loginWrapper) loginWrapper.style.display = 'none';
         if (adminWrapper) adminWrapper.style.display = 'flex';
