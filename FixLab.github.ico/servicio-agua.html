@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Daños por agua | FixLab</title>
+  <link rel="icon" type="image/png" href="../Fotos/FixLab_Logo.png">
+  <link rel="stylesheet" href="../assets/css/styles.css?v=5">
+</head>
+<body>
+  <header class="site-header">
+    <nav class="container nav">
+      <a class="brand" href="index.html"><img src="../Fotos/FixLab_Logo.png" alt="FixLab" class="brand-logo"></a>
+      <button id="menuToggle" class="menu-toggle">Menú</button>
+      <ul id="navLinks" class="nav-links">
+        <li><a href="index.html">Inicio</a></li>
+        <li><a href="servicios.html" class="active">Servicios</a></li>
+        <li><a href="tiendas.html">Tiendas</a></li>
+        <li><a href="tienda.html">Tienda</a></li>
+        <li><a href="contacto.html">Contacto</a></li>
+      </ul>
+      <a class="btn" href="login.html">Iniciar sesión</a>
+    </nav>
+  </header>
+  <main class="page-main">
+    <section class="section">
+      <div class="container">
+        <p><a class="btn btn-secondary" href="servicios.html">← Volver</a></p>
+        <div class="product-detail">
+          <div class="product-gallery">
+            <img src="../Fotos servicios/daños_por_agua.png" alt="Daños por agua" class="product-main-image">
+          </div>
+          <article class="card">
+            <h1>Daños por agua</h1>
+            <p class="section-subtitle">Recuperación y limpieza técnica tras contacto con líquidos.</p>
+            <p class="price-tag">Desde 59€</p>
+            <p>Desmontaje completo, desoxidación de placa y revisión de componentes críticos.</p>
+            <p>Tiempo estimado: 24 a 48 horas, según el alcance del daño interno.</p>
+            <p>Presupuesto final tras diagnóstico interno detallado.</p>
+            <a href="reserva.html?service=Agua" class="booking-btn">📅 Reservar ahora</a>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container">
+      <nav class="footer-links">
+        <a href="index.html">Inicio</a><a href="servicios.html">Servicios</a><a href="tiendas.html">Tiendas</a><a href="tienda.html">Tienda</a><a href="aviso-legal.html">Legal</a>
+      </nav>
+      <p>© <span id="year"></span> FixLab</p>
+    </div>
+  </footer>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../assets/js/supabase-config.js"></script>
+  <script src="../assets/js/supabase-db.js"></script>
+  <script src="../assets/js/script.js"></script>
+</body>
+</html>

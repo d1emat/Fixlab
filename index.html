@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, user-scalable=yes">
+  <title>FixLab | Reparación profesional de móviles</title>
+  <meta name="description" content="FixLab - Reparación de móviles en Valladolid y Burgos. Diagnóstico gratuito.">
+  <link rel="icon" type="image/png" href="Fotos/FixLab_Logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" as="style"
+    href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Share+Tech+Mono&family=Inter:wght@400;500;600;700;800&display=swap">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Share+Tech+Mono&family=Inter:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet" media="print" onload="this.media='all'">
+  <noscript>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Share+Tech+Mono&family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet">
+  </noscript>
+  <link rel="stylesheet" href="assets/css/styles.css?v=2">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="assets/js/supabase-config.js"></script>
+  <script src="assets/js/supabase-db.js"></script>
+  <script src="assets/js/script.js" defer></script>
+</head>
+
+<body class="home-page">
+  <header class="site-header">
+    <nav class="container nav">
+      <a class="brand" href="index.html" aria-label="Ir a inicio">
+        <img src="Fotos/FixLab_Logo.png" alt="Logo FixLab" class="brand-logo">
+      </a>
+      <button id="menuToggle" class="menu-toggle" aria-label="Abrir menú">Menú</button>
+      <ul id="navLinks" class="nav-links">
+        <li><a href="index.html" class="active">Inicio</a></li>
+        <li><a href="servicios.html">Servicios</a></li>
+        <li><a href="calculadora.html">Presupuesto</a></li>
+        <li><a href="tiendas.html">Tiendas</a></li>
+        <li><a href="tienda.html">Tienda</a></li>
+        <li><a href="contacto.html">Contacto</a></li>
+      </ul>
+      <div style="display:flex; gap:0.5rem; align-items:center;">
+        <a class="btn btn-login" href="login.html">Login</a>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero reveal">
+      <div class="container hero-grid">
+        <div class="hero-content">
+          <h1 data-editable="hero-title">Reparación de móviles</h1>
+          <div class="hero-badges">
+            <span class="badge-item" data-editable="hero-badge-1">Todas las marcas</span>
+            <span class="badge-item" data-editable="hero-badge-2">Rápido</span>
+            <span class="badge-item" data-editable="hero-badge-3">Garantía</span>
+          </div>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="reserva.html">Reservar</a>
+            <a class="btn btn-secondary" href="servicios.html">Ver servicios</a>
+          </div>
+        </div>
+        <aside class="hero-visual">
+          <img id="heroPhoneImage" src="Fotos/samsung.webp" alt="Samsung" class="hero-image" width="300" height="400"
+            loading="eager" fetchpriority="high">
+        </aside>
+      </div>
+    </section>
+
+    <section id="reserva-rapida" class="section reveal" style="padding-top: 2rem;">
+      <div class="container">
+        <div class="glass-card" style="padding: 2.5rem; border-top: 3px solid var(--neon-yellow);">
+          <div style="text-align: center; margin-bottom: 2rem;">
+            <h2 class="section-title" style="margin-bottom: 0.5rem;">Reserva Rápida</h2>
+            <p class="section-subtitle">Ahorra tiempo y asegura tu turno en tienda.</p>
+          </div>
+          <form id="homeReservationForm" class="grid-form">
+            <div class="field">
+              <label for="homeName">Nombre</label>
+              <input type="text" id="homeName" placeholder="Tu nombre" required>
+            </div>
+            <div class="field">
+              <label for="homePhone">Teléfono</label>
+              <input type="tel" id="homePhone" placeholder="Tu teléfono" required>
+            </div>
+            <div class="field">
+              <label for="homeEmail">Email (Opcional)</label>
+              <input type="email" id="homeEmail" placeholder="tu@email.com">
+            </div>
+            <div class="field">
+              <label for="homeService">Servicio</label>
+              <select id="homeService" required>
+                <option value="">Selecciona servicio</option>
+                <option>Reparación de pantalla</option>
+                <option>Cambio de batería</option>
+                <option>Reparación de cámara</option>
+                <option>Daños por agua</option>
+                <option>Otro</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="homeStore">Tienda</label>
+              <select id="homeStore" required>
+                <option value="">Selecciona tienda</option>
+                <option>FixLab Río Shopping</option>
+                <option>FixLab Centro</option>
+                <option>FixLab Burgos</option>
+              </select>
+            </div>
+            <div style="grid-column: 1 / -1; display: flex; justify-content: center; margin-top: 1rem;">
+              <button type="submit" class="btn btn-primary" style="width: 100%; max-width: 300px;">Reservar
+                ahora</button>
+            </div>
+            <p id="homeReservationMsg" class="form-message"
+              style="grid-column: 1 / -1; text-align: center; margin-top: 1rem;"></p>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <section class="stats-strip reveal">
+      <div class="container stats-grid">
+        <div class="stat-card">
+          <p class="stat-value" data-editable="stat-1-value">+4.500</p>
+          <p class="stat-label" data-editable="stat-1-label">Reparaciones</p>
+        </div>
+        <div class="stat-card">
+          <p class="stat-value" data-editable="stat-2-value">24-48h</p>
+          <p class="stat-label" data-editable="stat-2-label">Tiempo medio</p>
+        </div>
+        <div class="stat-card">
+          <p class="stat-value" data-editable="stat-3-value">12 meses</p>
+          <p class="stat-label" data-editable="stat-3-label">Garantía</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="servicios" class="section reveal">
+      <div class="container">
+        <h2 class="section-title">Servicios</h2>
+        <div class="cards-grid">
+          <a class="card card-link" href="servicios/pantalla.html">
+            <div class="card-service-icon">
+              <img src="Iconos servicios/pantalla.png" alt="Icono Pantalla" width="48" height="48" loading="lazy">
+            </div>
+            <h3>Pantalla</h3>
+            <p class="price-tag">Desde 69€</p>
+          </a>
+          <a class="card card-link" href="servicios/bateria.html">
+            <div class="card-service-icon">
+              <img src="Iconos servicios/bateria-movil.png" alt="Icono Batería" width="48" height="48" loading="lazy">
+            </div>
+            <h3>Batería</h3>
+            <p class="price-tag">Desde 49€</p>
+          </a>
+          <a class="card card-link" href="servicios/camara.html">
+            <div class="card-service-icon">
+              <img src="Iconos servicios/camara-trasera.png" alt="Icono Cámara" width="48" height="48" loading="lazy">
+            </div>
+            <h3>Cámara</h3>
+            <p class="price-tag">Desde 55€</p>
+          </a>
+          <a class="card card-link" href="servicios/agua.html">
+            <div class="card-service-icon">
+              <img src="Iconos servicios/agua.png" alt="Icono Agua" width="48" height="48" loading="lazy">
+            </div>
+            <h3>Agua</h3>
+            <p class="price-tag">Desde 59€</p>
+          </a>
+          <a class="card card-link" href="servicios/conector.html">
+            <div class="card-service-icon">
+              <img src="Iconos servicios/conector-del-cable.png" alt="Icono Conector" width="48" height="48"
+                loading="lazy">
+            </div>
+            <h3>Conector</h3>
+            <p class="price-tag">Desde 39€</p>
+          </a>
+          <a class="card card-link" href="servicios/diagnostico.html">
+            <div class="card-service-icon">
+              <img src="Iconos servicios/diagnostico.svg" alt="Icono Diagnóstico" width="48" height="48" loading="lazy">
+            </div>
+            <h3>Diagnóstico</h3>
+            <p class="price-tag">Gratis</p>
+          </a>
+        </div>
+        <a href="servicios.html" class="btn btn-secondary" style="margin-top: 1rem;">Ver todos los servicios</a>
+      </div>
+    </section>
+
+    <!-- Activity Toasts Container -->
+    <div id="activityToasts" class="activity-toast-container"></div>
+
+    <section class="section section-soft reveal">
+      <div class="container">
+        <h2 class="section-title" data-editable="stores-title">Nuestras Tiendas</h2>
+        <div class="shop-grid">
+          <a class="shop-card shop-card-link" href="tienda-rio-shopping.html">
+            <img src="Fotos/tiendas/Kiosko Rio Shopping.webp" alt="FixLab Río Shopping" class="card-image"
+              loading="lazy">
+            <h3 data-editable="store-1-name">Río Shopping</h3>
+            <p data-editable="store-1-address">Av. de Madrid, 25</p>
+            <span class="price-tag" data-editable="store-1-tag">Gratis diagnóstico</span>
+          </a>
+          <a class="shop-card shop-card-link" href="tienda-centro.html">
+            <img src="Fotos/tiendas/Local calle acibelas nº9.webp" alt="FixLab Centro" class="card-image"
+              loading="lazy">
+            <h3 data-editable="store-2-name">Centro</h3>
+            <p data-editable="store-2-address">Calle Acibelas, 9</p>
+            <span class="price-tag" data-editable="store-2-tag">Protector 12€</span>
+          </a>
+          <a class="shop-card shop-card-link" href="tienda-burgos.html">
+            <img src="Fotos/foto_puerta_burgos.png" alt="FixLab Burgos" class="card-image" loading="lazy">
+            <h3 data-editable="store-3-name">Burgos</h3>
+            <p data-editable="store-3-address">Santiago Apóstol, 31</p>
+            <span class="price-tag" data-editable="store-3-tag">80m²</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section id="calculadora" class="section section-soft reveal">
+      <div class="container calc-container">
+        <h2 class="section-title" data-editable="calc-title">Calculadora de presupuesto</h2>
+        <p class="section-subtitle" data-editable="calc-subtitle">Selecciona tu móvil y avería para obtener precio y
+          tiempo estimado al instante.</p>
+
+        <div class="calc-grid">
+          <div class="calc-form">
+            <div class="field">
+              <label for="calcModel">Modelo de móvil</label>
+              <input type="text" id="calcModelSearch" class="calc-search" placeholder="Buscar modelo..."
+                autocomplete="off">
+              <select id="calcModel" class="calc-select">
+                <option value="">-- Selecciona modelo --</option>
+                <optgroup label="iPhone">
+                  <option value="iPhone 11">iPhone 11</option>
+                  <option value="iPhone 12">iPhone 12</option>
+                  <option value="iPhone 12 Pro">iPhone 12 Pro</option>
+                  <option value="iPhone 13">iPhone 13</option>
+                  <option value="iPhone 13 Pro">iPhone 13 Pro</option>
+                  <option value="iPhone 14">iPhone 14</option>
+                  <option value="iPhone 14 Pro">iPhone 14 Pro</option>
+                  <option value="iPhone 15">iPhone 15</option>
+                  <option value="iPhone 15 Pro">iPhone 15 Pro</option>
+                </optgroup>
+                <optgroup label="Samsung">
+                  <option value="Samsung Galaxy S21">Samsung Galaxy S21</option>
+                  <option value="Samsung Galaxy S22">Samsung Galaxy S22</option>
+                  <option value="Samsung Galaxy S23">Samsung Galaxy S23</option>
+                  <option value="Samsung Galaxy S24">Samsung Galaxy S24</option>
+                  <option value="Samsung Galaxy A54">Samsung Galaxy A54</option>
+                  <option value="Samsung Galaxy A34">Samsung Galaxy A34</option>
+                  <option value="Samsung Galaxy A14">Samsung Galaxy A14</option>
+                </optgroup>
+                <optgroup label="Xiaomi">
+                  <option value="Xiaomi Redmi Note 12">Xiaomi Redmi Note 12</option>
+                  <option value="Xiaomi Redmi Note 13">Xiaomi Redmi Note 13</option>
+                  <option value="Xiaomi 13T">Xiaomi 13T</option>
+                  <option value="Xiaomi 14T">Xiaomi 14T</option>
+                </optgroup>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="calcIssue">Tipo de avería</label>
+              <select id="calcIssue" class="calc-select">
+                <option value="">-- Selecciona avería --</option>
+                <option value="pantalla">Pantalla</option>
+                <option value="bateria">Batería</option>
+                <option value="camara">Cámara</option>
+                <option value="agua">Daño por agua</option>
+                <option value="conector">Conector carga</option>
+                <option value="botones">Botones</option>
+                <option value="altavoz">Altavoz</option>
+                <option value="microfono">Micrófono</option>
+              </select>
+            </div>
+          </div>
+
+          <button type="button" class="btn btn-primary" style="margin-top:1rem;" onclick="calcularPresupuesto()">Ver
+            presupuesto</button>
+
+          <div id="calcResult" class="calc-result" hidden>
+            <div class="calc-result-inner">
+              <h3 class="calc-result-title">Presupuesto estimado</h3>
+              <div class="calc-result-model" id="calcResultModel"></div>
+              <div class="calc-result-issue" id="calcResultIssue"></div>
+              <div class="calc-result-price" id="calcResultPrice"></div>
+              <div class="calc-result-meta">
+                <div class="calc-meta-item">
+                  <span class="calc-meta-label">Tiempo estimado</span>
+                  <span class="calc-meta-value" id="calcResultTime"></span>
+                </div>
+                <div class="calc-meta-item">
+                  <span class="calc-meta-label">Disponibilidad</span>
+                  <span class="calc-meta-value" id="calcResultStock"></span>
+                </div>
+              </div>
+              <a href="reserva.html" id="calcReserveBtn" class="btn btn-primary calc-reserve-btn">Reservar esta
+                reparación</a>
+            </div>
+          </div>
+
+          <script>
+            // La lógica de calcularPresupuesto se ha movido a script.js para mejorar el rendimiento.
+          </script>
+        </div>
+      </div>
+      </div>
+    </section>
+
+    <section class="cta-strip reveal">
+      <div class="container cta-content">
+        <p data-editable="cta-text">¿Te ha pasado algo a tu móvil?</p>
+        <a class="btn btn-light" href="reserva.html">Reservar reparación</a>
+      </div>
+    </section>
+
+    <!-- ══ POP-UP DE CONFIRMACIÓN ══════════════════════════════ -->
+    <div class="popup-overlay" id="confirmPopup" role="dialog" aria-modal="true" aria-labelledby="popupTitle">
+      <div class="popup-box">
+        <button class="popup-close" id="popupClose" aria-label="Cerrar">✕</button>
+
+        <div class="popup-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#F5E642" stroke-width="2.5"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+            <polyline points="22 4 12 14.01 9 11.01" />
+          </svg>
+        </div>
+
+        <p class="popup-title" id="popupTitle">¡Reserva enviada!</p>
+        <p class="popup-subtitle">
+          Guarda tu código de seguimiento para consultar el estado de tu reparación.
+        </p>
+
+        <div class="popup-code-box">
+          <p class="popup-code-label">Tu código de reparación</p>
+          <p class="popup-code-value" id="popupCode">FL-2026-0000</p>
+          <button class="popup-code-copy" id="copyCodeBtn" type="button">Copiar</button>
+        </div>
+
+        <div class="popup-actions">
+          <a href="seguimiento-publico.html" class="popup-btn-primary" id="popupTrackBtn">
+            Ver seguimiento
+          </a>
+          <button class="popup-btn-secondary" id="popupCloseBottom" type="button">
+            Cerrar
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <nav class="footer-links">
+        <a href="index.html">Inicio</a>
+        <a href="servicios.html">Servicios</a>
+        <a href="calculadora.html">Presupuesto</a>
+        <a href="tiendas.html">Tiendas</a>
+        <a href="tienda.html">Tienda</a>
+        <a href="seguimiento-publico.html">Seguimiento</a>
+        <a href="contacto.html">Contacto</a>
+        <a href="aviso-legal.html">Legal</a>
+      </nav>
+      <div
+        style="margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 2rem;">
+        <div>
+          <div style="font-family: 'Share Tech Mono'; font-size: 0.8rem; line-height: 1.6;">
+          </div>
+        </div>
+        <div style="text-align: right;">
+          <p>© <span id="year"></span> FixLab S.L. | Todos los derechos reservados.</p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <a class="whatsapp-float"
+    href="https://wa.me/34600000000?text=Hola%20FixLab%2C%20quiero%20informaci%C3%B3n%20sobre%20una%20reparaci%C3%B3n."
+    target="_blank" rel="noopener noreferrer" aria-label="Contactar por WhatsApp">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+      <path
+        d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z" />
+    </svg>
+  </a>
+
+</body>
+
+</html>

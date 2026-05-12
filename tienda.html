@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5.0, user-scalable=yes">
+  <title>Tienda | FixLab S.L.</title>
+  <meta name="description" content="Compra móviles reacondicionados y accesorios en la tienda de FixLab S.L. en Valladolid y Burgos.">
+  <link rel="icon" type="image/png" href="Fotos/FixLab_Logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Share+Tech+Mono&family=Inter:wght@400;500;600;700;800&display=swap">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Share+Tech+Mono&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Share+Tech+Mono&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"></noscript>
+  <link rel="stylesheet" href="assets/css/styles.css?v=2">
+</head>
+<body>
+  <header class="site-header">
+    <nav class="container nav">
+       <a class="brand" href="index.html">
+         <img src="Fotos/FixLab_Logo.png" alt="Logo FixLab" class="brand-logo">
+       </a>
+      <button id="menuToggle" class="menu-toggle" aria-label="Abrir menú">Menú</button>
+      <ul id="navLinks" class="nav-links">
+        <li><a href="index.html">Inicio</a></li>
+        <li><a href="servicios.html">Servicios</a></li>
+        <li><a href="calculadora.html">Presupuesto</a></li>
+        <li><a href="tiendas.html">Tiendas físicas</a></li>
+        <li><a href="tienda.html" class="active">Tienda</a></li>
+        <li><a href="contacto.html">Contacto</a></li>
+      </ul>
+       <div style="display:flex; gap:0.5rem; align-items:center;">
+         <a class="btn btn-login" href="login.html">Iniciar sesión</a>
+       </div>
+    </nav>
+  </header>
+
+  <main class="page-main">
+    <section class="section">
+      <div class="container">
+        <h1 class="section-title" data-editable="shop-title">Tienda FixLab</h1>
+        <p class="section-subtitle" data-editable="shop-subtitle">Encuentra moviles reacondicionados y accesorios listos para llevar con garantia.</p>
+        <div class="store-layout">
+          <div class="store-results">
+            <h2 class="section-title" data-editable="shop-section1-title">Moviles reacondicionados</h2>
+            <div class="cards-grid reacondicionados-grid">
+              <article class="card store-item" data-id="iphone-12" data-type="reacondicionado" data-brand="iphone" data-price="299" data-href="checkout.html?id=iphone-12" role="link" tabindex="0">
+                <h3 data-editable="product-1-name">iPhone 12 reacondicionado</h3>
+                <img src="https://fdn2.gsmarena.com/vv/bigpic/apple-iphone-12.jpg" alt="iPhone 12 reacondicionado" class="card-image" loading="lazy">
+                <p data-editable="product-1-desc">Perfecto para uso diario, Face ID y excelente camara.</p>
+                <p class="price-tag" data-editable="product-1-price">Desde 299 EUR</p>
+                <div class="btn btn-primary" style="margin-top:1rem; width:100%; text-align:center; padding: 0.5rem; font-size: 0.85rem; background: var(--neon-cyan); color: #000;">Comprar ahora</div>
+              </article>
+              <article class="card store-item" data-id="iphone-14-pro" data-type="reacondicionado" data-brand="iphone" data-price="449" data-href="checkout.html?id=iphone-14-pro" role="link" tabindex="0">
+                <h3 data-editable="product-2-name">iPhone 14 Pro reacondicionado</h3>
+                <img src="https://fdn2.gsmarena.com/vv/bigpic/apple-iphone-14-pro.jpg" alt="iPhone 14 Pro reacondicionado" class="card-image" loading="lazy">
+                <p data-editable="product-2-desc">Pantalla ProMotion, gran autonomia y rendimiento premium.</p>
+                <p class="price-tag" data-editable="product-2-price">Desde 449 EUR</p>
+                <div class="btn btn-primary" style="margin-top:1rem; width:100%; text-align:center; padding: 0.5rem; font-size: 0.85rem; background: var(--neon-cyan); color: #000;">Comprar ahora</div>
+              </article>
+              <article class="card store-item" data-id="iphone-15" data-type="reacondicionado" data-brand="iphone" data-price="579" data-href="checkout.html?id=iphone-15" role="link" tabindex="0">
+                <h3 data-editable="product-3-name">iPhone 15 reacondicionado</h3>
+                <img src="https://fdn2.gsmarena.com/vv/bigpic/apple-iphone-15.jpg" alt="iPhone 15 reacondicionado" class="card-image" loading="lazy">
+                <p data-editable="product-3-desc">USB-C, camara mejorada y garantia oficial FixLab.</p>
+                <p class="price-tag" data-editable="product-3-price">Desde 579 EUR</p>
+                <div class="btn btn-primary" style="margin-top:1rem; width:100%; text-align:center; padding: 0.5rem; font-size: 0.85rem; background: var(--neon-cyan); color: #000;">Comprar ahora</div>
+              </article>
+              <article class="card store-item" data-id="samsung-s23" data-type="reacondicionado" data-brand="samsung" data-price="289" data-href="checkout.html?id=samsung-s23" role="link" tabindex="0">
+                <h3 data-editable="product-4-name">Samsung Galaxy S23 reacondicionado</h3>
+                <img src="https://fdn2.gsmarena.com/vv/bigpic/samsung-galaxy-s23-5g.jpg" alt="Samsung Galaxy S23 reacondicionado" class="card-image" loading="lazy">
+                <p data-editable="product-4-desc">Pantalla AMOLED y camaras versatiles para foto y video.</p>
+                <p class="price-tag" data-editable="product-4-price">Desde 289 EUR</p>
+                <div class="btn btn-primary" style="margin-top:1rem; width:100%; text-align:center; padding: 0.5rem; font-size: 0.85rem; background: var(--neon-cyan); color: #000;">Comprar ahora</div>
+              </article>
+              <article class="card store-item" data-id="samsung-s24-ultra" data-type="reacondicionado" data-brand="samsung" data-price="329" data-href="checkout.html?id=samsung-s24-ultra" role="link" tabindex="0">
+                <h3 data-editable="product-5-name">Samsung Galaxy S24 Ultra reacondicionado</h3>
+                <img src="Imagenes%20tienda/Foto_s24.png" alt="Samsung Galaxy S24 reacondicionado" class="card-image" loading="lazy">
+                <p data-editable="product-5-desc">Rendimiento muy equilibrado con camara de gran calidad.</p>
+                <p class="price-tag" data-editable="product-5-price">Desde 329 EUR</p>
+                <div class="btn btn-primary" style="margin-top:1rem; width:100%; text-align:center; padding: 0.5rem; font-size: 0.85rem; background: var(--neon-cyan); color: #000;">Comprar ahora</div>
+              </article>
+              <article class="card store-item" data-id="xiaomi-13t" data-type="reacondicionado" data-brand="xiaomi" data-price="269" data-href="checkout.html?id=xiaomi-13t" role="link" tabindex="0">
+                <h3 data-editable="product-6-name">Xiaomi 13T reacondicionado</h3>
+                <img src="https://fdn2.gsmarena.com/vv/bigpic/xiaomi-13t.jpg" alt="Xiaomi 13T reacondicionado" class="card-image" loading="lazy">
+                <p data-editable="product-6-desc">Gran pantalla, carga rapida y rendimiento de gama media-alta.</p>
+                <p class="price-tag" data-editable="product-6-price">Desde 269 EUR</p>
+                <div class="btn btn-primary" style="margin-top:1rem; width:100%; text-align:center; padding: 0.5rem; font-size: 0.85rem; background: var(--neon-cyan); color: #000;">Comprar ahora</div>
+              </article>
+              <article class="card store-item" data-id="xiaomi-redmi-note" data-type="reacondicionado" data-brand="xiaomi" data-price="219" data-href="checkout.html?id=xiaomi-redmi-note" role="link" tabindex="0">
+                <h3 data-editable="product-7-name">Xiaomi Redmi Note reacondicionado</h3>
+                <img src="https://fdn2.gsmarena.com/vv/bigpic/xiaomi-redmi-note-13-pro-plus.jpg" alt="Xiaomi Redmi Note reacondicionado" class="card-image" loading="lazy">
+                <p data-editable="product-7-desc">Ideal calidad-precio para dia a dia, multimedia y apps.</p>
+                <p class="price-tag" data-editable="product-7-price">Desde 219 EUR</p>
+                <div class="btn btn-primary" style="margin-top:1rem; width:100%; text-align:center; padding: 0.5rem; font-size: 0.85rem; background: var(--neon-cyan); color: #000;">Comprar ahora</div>
+              </article>
+            </div>
+
+            <h2 class="section-title" data-editable="shop-section2-title">Accesorios y productos</h2>
+            <p class="section-subtitle" data-editable="shop-section2-subtitle">Productos habituales en tienda para proteger y mejorar tu movil.</p>
+            <div class="cards-grid">
+              <article class="card store-item" data-id="fundas-antigolpes" data-type="accesorio" data-brand="general" data-price="14.9" data-href="checkout.html?id=fundas-antigolpes" role="link" tabindex="0">
+                <h3 data-editable="acc-1-name">Fundas antigolpes</h3>
+                <img src="Imagenes%20tienda/Foto_funda_1.jpg" alt="Fundas para movil" class="card-image" loading="lazy">
+                <p data-editable="acc-1-desc">Fundas de silicona, rigidas y tipo libro para iPhone, Samsung y Xiaomi.</p>
+                <p class="price-tag" data-editable="acc-1-price">Desde 14,90 EUR</p>
+                <div class="btn btn-primary" style="margin-top:1rem; width:100%; text-align:center; padding: 0.5rem; font-size: 0.85rem; background: var(--neon-cyan); color: #000;">Comprar ahora</div>
+              </article>
+              <article class="card store-item" data-id="protector-templado" data-type="accesorio" data-brand="general" data-price="12" data-href="checkout.html?id=protector-templado" role="link" tabindex="0">
+                <h3 data-editable="acc-2-name">Protector de pantalla templado</h3>
+                <img src="Imagenes%20tienda/foto_protector_pantalla_1.jpg" alt="Protector de pantalla para movil" class="card-image" loading="lazy">
+                <p data-editable="acc-2-desc">Cristal templado y protector hidrogel con instalacion en el momento.</p>
+                <p class="price-tag" data-editable="acc-2-price">Desde 12,00 EUR</p>
+                <div class="btn btn-primary" style="margin-top:1rem; width:100%; text-align:center; padding: 0.5rem; font-size: 0.85rem; background: var(--neon-cyan); color: #000;">Comprar ahora</div>
+              </article>
+              <article class="card store-item" data-id="cargador-20w" data-type="accesorio" data-brand="general" data-price="18.9" data-href="checkout.html?id=cargador-20w" role="link" tabindex="0">
+                <h3 data-editable="acc-3-name">Cargador rapido 20W</h3>
+                <img src="https://images.unsplash.com/photo-1583863788434-e58a36330cf0?auto=format&fit=crop&w=900&q=80" alt="Cargador rapido de movil" class="card-image" loading="lazy">
+                <p data-editable="acc-3-desc">Cargador USB-C con cable incluido y proteccion de sobrecarga.</p>
+                <p class="price-tag" data-editable="acc-3-price">Desde 18,90 EUR</p>
+                <div class="btn btn-primary" style="margin-top:1rem; width:100%; text-align:center; padding: 0.5rem; font-size: 0.85rem; background: var(--neon-cyan); color: #000;">Comprar ahora</div>
+              </article>
+              <article class="card store-item" data-id="auriculares-tws" data-type="accesorio" data-brand="general" data-price="24.9" data-href="checkout.html?id=auriculares-tws" role="link" tabindex="0">
+                <h3 data-editable="acc-4-name">Auriculares Bluetooth TWS</h3>
+                <img src="https://images.unsplash.com/photo-1546435770-a3e426bf472b?auto=format&fit=crop&w=900&q=80" alt="Auriculares bluetooth inalambricos" class="card-image" loading="lazy">
+                <p data-editable="acc-4-desc">Auriculares inalambricos con microfono para llamadas y musica.</p>
+                <p class="price-tag" data-editable="acc-4-price">Desde 24,90 EUR</p>
+                <div class="btn btn-primary" style="margin-top:1rem; width:100%; text-align:center; padding: 0.5rem; font-size: 0.85rem; background: var(--neon-cyan); color: #000;">Comprar ahora</div>
+              </article>
+              <article class="card store-item" data-id="powerbank-10000" data-type="accesorio" data-brand="general" data-price="19.9" data-href="checkout.html?id=powerbank-10000" role="link" tabindex="0">
+                <h3 data-editable="acc-5-name">Power bank 10000mAh</h3>
+                <img src="Imagenes%20tienda/Foto_powerbank.jpg" alt="Bateria externa power bank" class="card-image" loading="lazy">
+                <p data-editable="acc-5-desc">Bateria externa compacta para cargar el movil todo el dia.</p>
+                <p class="price-tag" data-editable="acc-5-price">Desde 19,90 EUR</p>
+                <div class="btn btn-primary" style="margin-top:1rem; width:100%; text-align:center; padding: 0.5rem; font-size: 0.85rem; background: var(--neon-cyan); color: #000;">Comprar ahora</div>
+              </article>
+              <article class="card store-item" data-id="soporte-coche-magnetico" data-type="accesorio" data-brand="general" data-price="11.9" data-href="checkout.html?id=soporte-coche-magnetico" role="link" tabindex="0">
+                <h3 data-editable="acc-6-name">Soporte coche magnetico</h3>
+                <img src="Imagenes%20tienda/soporte_coche.jpg" alt="Soporte para movil de coche" class="card-image" loading="lazy">
+                <p data-editable="acc-6-desc">Soporte de rejilla para usar GPS con seguridad.</p>
+                <p class="price-tag" data-editable="acc-6-price">Desde 11,90 EUR</p>
+                <div class="btn btn-primary" style="margin-top:1rem; width:100%; text-align:center; padding: 0.5rem; font-size: 0.85rem; background: var(--neon-cyan); color: #000;">Comprar ahora</div>
+              </article>
+            </div>
+            <p id="storeEmptyState" class="section-subtitle" hidden>No hay productos que coincidan con los filtros seleccionados.</p>
+          </div>
+
+          <aside class="store-sidebar" aria-label="Filtros de tienda">
+        <h3>Buscar</h3>
+        <label class="field">
+          <span class="sr-only">Buscar productos en tienda</span>
+          <input id="storeSearch" type="search" placeholder="Buscar por nombre o descripcion">
+        </label>
+
+        <h3>Tipo de producto</h3>
+        <label class="filter-row"><input type="checkbox" class="store-filter-type" value="reacondicionado" checked> Reacondicionados</label>
+        <label class="filter-row"><input type="checkbox" class="store-filter-type" value="accesorio" checked> Accesorios</label>
+
+        <h3>Marca</h3>
+        <label class="filter-row"><input type="checkbox" class="store-filter-brand" value="iphone" checked> iPhone</label>
+        <label class="filter-row"><input type="checkbox" class="store-filter-brand" value="samsung" checked> Samsung</label>
+        <label class="filter-row"><input type="checkbox" class="store-filter-brand" value="xiaomi" checked> Xiaomi</label>
+        <label class="filter-row"><input type="checkbox" class="store-filter-brand" value="general" checked> General</label>
+
+        <h3>Precio maximo</h3>
+        <label class="field">
+          <input id="storePriceMax" type="range" min="10" max="700" value="700" step="5">
+        </label>
+        <p class="price-tag">Hasta <span id="storePriceValue">700</span> EUR</p>
+          </aside>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <p>FixLab S.L. - Reparacion de moviles en Valladolid</p>
+       <nav class="footer-links" aria-label="Enlaces del pie">
+         <a href="index.html">Inicio</a><a href="servicios.html">Servicios</a><a href="calculadora.html">Presupuesto</a><a href="tiendas.html">Tiendas físicas</a><a href="tienda.html">Tienda</a><a href="seguimiento-publico.html">Seguimiento</a><a href="contacto.html">Contacto</a><a href="aviso-legal.html">Aviso legal</a><a href="politica-privacidad.html">Privacidad</a><a href="politica-cookies.html">Cookies</a>
+       </nav>
+      <p>Tres tiendas: Valladolid (Río Shopping y Calle Acibelas, 9) y Burgos (Calle Santiago Apóstol, 31)<br>© <span id="year"></span> FixLab S.L.</p>
+    </div>
+  </footer>
+  <a class="whatsapp-float" href="https://wa.me/34600000000?text=Hola%20FixLab%2C%20quiero%20informaci%C3%B3n%20sobre%20una%20reparaci%C3%B3n." target="_blank" rel="noopener noreferrer" aria-label="Contactar por WhatsApp"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg></a>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="assets/js/supabase-config.js"></script>
+  <script src="assets/js/supabase-db.js"></script>
+  <script src="assets/js/script.js"></script>
+</body>
+</html>

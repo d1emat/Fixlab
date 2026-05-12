@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, user-scalable=yes">
+  <title>Seguimiento de reparación | FixLab</title>
+  <meta name="description" content="Consulta el estado de tu reparación en FixLab con tu número de ticket.">
+  <link rel="icon" type="image/png" href="Fotos/FixLab_Logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Share+Tech+Mono&family=Inter:wght@400;500;600;700;800&display=swap">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Share+Tech+Mono&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Share+Tech+Mono&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"></noscript>
+  <link rel="stylesheet" href="assets/css/styles.css?v=2">
+</head>
+<body class="tracking-page">
+  <header class="site-header">
+    <nav class="container nav">
+      <a class="brand" href="index.html" aria-label="Ir a inicio">
+        <img src="Fotos/FixLab_Logo.png" alt="Logo FixLab" class="brand-logo">
+      </a>
+      <button id="menuToggle" class="menu-toggle" aria-label="Abrir menú">Menú</button>
+      <ul id="navLinks" class="nav-links">
+        <li><a href="index.html">Inicio</a></li>
+        <li><a href="servicios.html">Servicios</a></li>
+        <li><a href="calculadora.html">Presupuesto</a></li>
+        <li><a href="tiendas.html">Tiendas</a></li>
+        <li><a href="tienda.html">Tienda</a></li>
+        <li><a href="contacto.html">Contacto</a></li>
+      </ul>
+       <div style="display:flex; gap:0.5rem; align-items:center;">
+         <a class="btn btn-login" href="login.html">Login</a>
+       </div>
+    </nav>
+  </header>
+
+  <main class="page-main">
+    <section class="section reveal">
+      <div class="container tracking-container">
+        <h1 class="section-title">Seguimiento</h1>
+        <p class="section-subtitle">Introduce tu número de ticket para ver el estado real de tu reparación.</p>
+
+        <!-- DASHBOARD DE USUARIO (Solo si está logueado) -->
+        <div id="userDashboard" class="user-dashboard" hidden>
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 1.5rem;">
+            <h2 style="font-family:Orbitron; font-size:1.2rem; margin:0;">Hola, <span id="userName">Cliente</span></h2>
+            <p style="font-size:0.8rem; color:var(--muted); margin:0;">Tus pedidos y reparaciones recientes</p>
+          </div>
+          <div id="userOrdersList" class="user-orders-list">
+            <!-- Cargado por JS -->
+          </div>
+        </div>
+
+        <form id="publicTrackingForm" class="glass-card" style="padding: 2rem;">
+          <div class="field field-tracking">
+            <label for="ticketNumber">Número de ticket</label>
+            <input type="text" id="ticketNumber" class="tracking-input" placeholder="FL-2024-1234" pattern="FL-\d{4}-\d{4}" required>
+            <button type="submit" class="btn btn-primary">Consultar</button>
+          </div>
+        </form>
+
+        <div id="trackingMessage" class="form-message" hidden></div>
+
+        <div id="trackingResult" class="tracking-result" hidden>
+          <div class="tracking-header">
+            <h3 id="trackService"></h3>
+            <span id="trackOrderNumber" class="tracking-order"></span>
+          </div>
+
+          <div class="stepper" id="stepper">
+            <div class="stepper-step" data-step="0">
+              <div class="stepper-circle">1</div>
+              <span class="stepper-label">Recibido</span>
+            </div>
+            <div class="stepper-line"></div>
+            <div class="stepper-step" data-step="1">
+              <div class="stepper-circle">2</div>
+              <span class="stepper-label">En diagnóstico</span>
+            </div>
+            <div class="stepper-line"></div>
+            <div class="stepper-step" data-step="2">
+              <div class="stepper-circle">3</div>
+              <span class="stepper-label">Reparando</span>
+            </div>
+            <div class="stepper-line"></div>
+            <div class="stepper-step" data-step="3">
+              <div class="stepper-circle">4</div>
+              <span class="stepper-label">Listo para recoger</span>
+            </div>
+            <div class="stepper-line"></div>
+            <div class="stepper-step" data-step="4">
+              <div class="stepper-circle">5</div>
+              <span class="stepper-label">Entregado</span>
+            </div>
+          </div>
+
+          <div class="tracking-details">
+            <div class="tracking-detail-item">
+              <span class="tracking-detail-label">Modelo</span>
+              <span class="tracking-detail-value" id="trackModel"></span>
+            </div>
+            <div class="tracking-detail-item">
+              <span class="tracking-detail-label">Tienda</span>
+              <span class="tracking-detail-value" id="trackStore"></span>
+            </div>
+            <div class="tracking-detail-item">
+              <span class="tracking-detail-label">Estado actual</span>
+              <span class="tracking-detail-value" id="trackStatus"></span>
+            </div>
+            <div class="tracking-detail-item">
+              <span class="tracking-detail-label">Fecha estimada</span>
+              <span class="tracking-detail-value" id="trackDate"></span>
+            </div>
+          </div>
+        </div>
+
+        <div id="trackingNotFound" class="tracking-not-found" hidden>
+          <p>No encontramos un ticket con ese número.</p>
+          <p>¿Necesitas ayuda? <a href="https://wa.me/34600000000" class="btn btn-light" target="_blank" rel="noopener noreferrer">Contactar por WhatsApp</a></p>
+        </div>
+
+        <div id="trackingAction" style="margin-top: 2.5rem; text-align: center;" hidden>
+          <p class="muted" style="margin-bottom: 1rem;">¿Qué te ha parecido nuestro servicio?</p>
+          <a href="valoracion.html" class="btn btn-primary" style="background: var(--neon-yellow); color: #000; border: none; font-weight: 700;">
+            Dejar una valoración
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <nav class="footer-links">
+        <a href="index.html">Inicio</a>
+        <a href="servicios.html">Servicios</a>
+        <a href="calculadora.html">Presupuesto</a>
+        <a href="tiendas.html">Tiendas</a>
+        <a href="tienda.html">Tienda</a>
+        <a href="seguimiento-publico.html">Seguimiento</a>
+        <a href="contacto.html">Contacto</a>
+        <a href="aviso-legal.html">Legal</a>
+      </nav>
+      <p>© <span id="year"></span> FixLab</p>
+    </div>
+  </footer>
+
+  <a class="whatsapp-float" href="https://wa.me/34600000000?text=Hola%20FixLab%2C%20necesito%20ayuda%20con%20mi%20reparaci%C3%B3n." target="_blank" rel="noopener noreferrer" aria-label="Contactar por WhatsApp">
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg>
+  </a>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="assets/js/supabase-config.js"></script>
+  <script src="assets/js/supabase-db.js"></script>
+  <script src="assets/js/script.js"></script>
+  <script>
+    // Hacer FixLabDB accesible globalmente
+    if (typeof FixLabDB !== 'undefined') window.FixLabDB = FixLabDB;
+    
+    // Lógica de seguimiento
+    (function() {
+      const form = document.getElementById("publicTrackingForm");
+      const input = document.getElementById("ticketNumber");
+      const msg = document.getElementById("trackingMessage");
+      const result = document.getElementById("trackingResult");
+      const notFound = document.getElementById("trackingNotFound");
+      const trackService = document.getElementById("trackService");
+      const trackOrder = document.getElementById("trackOrderNumber");
+      const trackModel = document.getElementById("trackModel");
+      const trackStore = document.getElementById("trackStore");
+      const trackStatus = document.getElementById("trackStatus");
+      const trackDate = document.getElementById("trackDate");
+      const stepper = document.getElementById("stepper");
+
+      const STEPS_REPARACION = ["Recibido", "En diagnóstico", "Reparando", "Listo para recoger", "Entregado"];
+      const STEPS_PEDIDO = ["Pago recibido", "Preparando", "Enviado", "En reparto", "Entregado"];
+      
+      const STATUS_MAP = {
+        "solicitud recibida": 0,
+        "recibida": 0,
+        "en diagnóstico": 1,
+        "diagno": 1,
+        "reparando": 2,
+        "reparación": 2,
+        "listo para recoger": 3,
+        "listo": 3,
+        "entregado": 4,
+        "pendiente de envío": 1,
+        "preparando": 1,
+        "enviado": 2,
+        "en reparto": 3
+      };
+
+      function getStepIndex(status) {
+        if (!status) return 0;
+        const s = status.toLowerCase();
+        for (const key in STATUS_MAP) {
+          if (s.includes(key)) return STATUS_MAP[key];
+        }
+        return 0;
+      }
+
+      function getStatusRank(status) {
+        return getStepIndex(status || "");
+      }
+
+      function normalizeTicket(value) {
+        return (value || "").toString().replace("#", "").trim().toUpperCase();
+      }
+
+      function pickBestReservation(current, next) {
+        if (!current) return next;
+
+        const currentTime = Date.parse(current.updatedAt || current.createdAt || current.date || "");
+        const nextTime = Date.parse(next.updatedAt || next.createdAt || next.date || "");
+        if (!Number.isNaN(nextTime) && (Number.isNaN(currentTime) || nextTime > currentTime)) {
+          return next;
+        }
+
+        if (getStatusRank(next.status) > getStatusRank(current.status)) {
+          return next;
+        }
+
+        return current;
+      }
+
+      function readTrackingCollection(key) {
+        try {
+          if (window.FixLabDB && key === 'fixlab_db_reservations') {
+            return window.FixLabDB.getCollection(window.FixLabDB.collections.RESERVATIONS);
+          }
+
+          return [];
+        } catch(e) {
+          return [];
+        }
+      }
+
+      function getAllReservations() {
+        const primary = readTrackingCollection('fixlab_db_reservations');
+        const byTicket = new Map();
+
+        primary.forEach(function(item) {
+          const id = normalizeTicket(item.orderNumber || item.code || item._id);
+          if (!id) return;
+          byTicket.set(id, pickBestReservation(byTicket.get(id), item));
+        });
+
+        return Array.from(byTicket.values());
+      }
+
+      if (form && input) {
+        form.addEventListener("submit", function(e) {
+          e.preventDefault();
+          const ticket = input.value.trim().toUpperCase();
+          
+          if (!/^FL-\d{4}-\d{4}$/.test(ticket) && !/^ORD-\d{4}$/.test(ticket)) {
+            if (msg) { 
+              msg.textContent = "Formato inválido. Usa: FL-2026-XXXX o ORD-XXXX"; 
+              msg.style.color = "var(--neon-pink)"; 
+              msg.hidden = false; 
+            }
+            if (result) result.hidden = true;
+            if (notFound) notFound.hidden = true;
+            return;
+          }
+
+          const allReservations = getAllReservations();
+           
+          const found = allReservations.find(function(r) {
+            const cleanCode = normalizeTicket(r.orderNumber || r.code);
+            return cleanCode === ticket;
+          });
+          
+          if (!found) {
+            if (msg) msg.hidden = true;
+            if (result) result.hidden = true;
+            if (notFound) notFound.hidden = false;
+            return;
+          }
+
+          if (notFound) notFound.hidden = true;
+          if (msg) msg.hidden = true;
+          if (result) result.hidden = false;
+          const trackAction = document.getElementById("trackingAction");
+          if (trackAction) trackAction.hidden = false;
+
+          const isPedido = (found.type === 'PRODUCT_ORDER' || ticket.startsWith('ORD'));
+          const currentSteps = isPedido ? STEPS_PEDIDO : STEPS_REPARACION;
+
+          const serviceName = found.productName || (found.service || "Reparación").split("·")[0].trim();
+          if (trackService) trackService.textContent = serviceName;
+          if (trackOrder) trackOrder.textContent = ticket;
+          
+          const modelText = found.address || found.deviceBrand || found.brand || (found.service || "").split("·")[1]?.trim() || "Genérico";
+          if (trackModel) trackModel.textContent = modelText;
+          if (trackStore) trackStore.textContent = found.store || "Tienda Online";
+          
+          const currentStatus = found.status || "Procesando";
+          if (trackStatus) trackStatus.textContent = currentStatus;
+
+          const createDate = found.createdAt ? new Date(found.createdAt) : new Date();
+          createDate.setDate(createDate.getDate() + 3);
+          if (trackDate) trackDate.textContent = createDate.toLocaleDateString();
+
+          const stepIndex = getStepIndex(currentStatus);
+
+          const labels = stepper.querySelectorAll(".stepper-label");
+          labels.forEach((label, i) => {
+            if (currentSteps[i]) label.textContent = currentSteps[i];
+          });
+
+          if (stepper) {
+            const steps = stepper.querySelectorAll(".stepper-step");
+            const lines = stepper.querySelectorAll(".stepper-line");
+            steps.forEach((step, i) => {
+              step.classList.remove("completed", "active");
+              if (i < stepIndex) step.classList.add("completed");
+              if (i === stepIndex) step.classList.add("active");
+              // Si el estado es "Entregado", marcar todos como completados
+              if (stepIndex === 4) step.classList.add("completed");
+            });
+            lines.forEach((line, i) => {
+              line.classList.toggle("completed", i < stepIndex || (stepIndex === 4));
+            });
+          }
+        });
+
+        // AUTO-CHECK URL PARAMETER
+        const urlParams = new URLSearchParams(window.location.search);
+        const ticketParam = urlParams.get('ticket');
+        if (ticketParam) {
+          input.value = ticketParam;
+          form.dispatchEvent(new Event('submit'));
+        }
+
+        // --- DASHBOARD DE USUARIO LOGUEADO ---
+        const checkUserSession = () => {
+          const SESSION_KEY = 'fixlab_db_session'; 
+          const USERS_KEY = 'fixlab_db_users';
+          const sessionRows = window.FixLabDB ? FixLabDB.getCollection(FixLabDB.collections.SESSION) : [];
+          const sessionData = Array.isArray(sessionRows) && sessionRows.length > 0 ? sessionRows : null;
+          
+          if (!sessionData) return;
+
+          let currentUserEmail = "";
+          if (Array.isArray(sessionData) && sessionData.length > 0) {
+            currentUserEmail = sessionData[0].email || "";
+          }
+          
+          if (!currentUserEmail) return;
+
+          const users = window.FixLabDB ? FixLabDB.getCollection(FixLabDB.collections.USERS) : [];
+          const user = users.find(u => u.email === currentUserEmail);
+          
+          if (user) {
+            const dashboard = document.getElementById('userDashboard');
+            if (dashboard) {
+              dashboard.hidden = false;
+              // Asegurarse de que no tenga display:none en CSS por error
+              dashboard.style.display = 'block'; 
+            }
+            document.getElementById('userName').textContent = user.name || user.email.split('@')[0];
+            
+            // Buscar sus pedidos
+            const allReservations = getAllReservations();
+
+            const userOrders = allReservations.filter(r => 
+              (r.email && r.email.toLowerCase() === currentUserEmail.toLowerCase()) ||
+              (r.customerEmail && r.customerEmail.toLowerCase() === currentUserEmail.toLowerCase())
+            );
+
+            const listEl = document.getElementById('userOrdersList');
+            if (userOrders.length > 0) {
+              listEl.innerHTML = userOrders.map(o => `
+                <div class="order-card-mini" onclick="document.getElementById('ticketNumber').value='${o.orderNumber || o.code}'; document.getElementById('publicTrackingForm').dispatchEvent(new Event('submit')); window.scrollTo({top: 0, behavior: 'smooth'});">
+                  <div class="order-info-mini">
+                    <span class="order-code-mini">${o.orderNumber || o.code}</span>
+                    <span style="color:var(--text); font-size:0.9rem;">${o.productName || o.service || 'Reparación'}</span>
+                  </div>
+                  <div style="text-align:right;">
+                    <div class="order-status-mini" style="color:var(--neon-cyan)">${o.status}</div>
+                    <div class="order-date-mini">${o.date || (o.createdAt ? new Date(o.createdAt).toLocaleDateString() : '')}</div>
+                  </div>
+                </div>
+              `).join('');
+            } else {
+              listEl.innerHTML = '<p class="muted" style="text-align:center; padding:1rem;">Aún no tienes pedidos o reparaciones registradas.</p>';
+            }
+          }
+        };
+
+        checkUserSession();
+      }
+    })();
+  </script>
+</body>
+</html>

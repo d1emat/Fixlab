@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5.0, user-scalable=yes">
+  <title>Valora tu experiencia | FixLab S.L.</title>
+  <meta name="description" content="Cuéntanos cómo fue tu experiencia en FixLab. Tu opinión nos ayuda a mejorar.">
+  <link rel="icon" type="image/png" href="Fotos/FixLab_Logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Share+Tech+Mono&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/styles.css?v=2">
+  <style>
+    /* ══ ESTRELLAS ═══════════════════════════════════════════ */
+    .stars-row {
+      display: flex;
+      gap: .5rem;
+      justify-content: center;
+      margin-bottom: 1.2rem;
+    }
+
+    .star-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: .15rem;
+      transition: transform .15s ease;
+    }
+
+    .star-btn:hover { transform: scale(1.18); }
+
+    .star-btn svg {
+      width: 36px; height: 36px;
+      transition: fill .15s ease, filter .15s ease;
+    }
+
+    .star-btn svg .star-fill {
+      fill: rgba(155,77,255,.15);
+      transition: fill .15s ease;
+    }
+
+    .star-btn svg .star-stroke {
+      stroke: rgba(155,77,255,.5);
+      fill: none;
+      stroke-width: 1.5;
+      transition: stroke .15s ease;
+    }
+
+    .star-btn.active svg .star-fill  { fill: #F5E642; }
+    .star-btn.active svg .star-stroke { stroke: #F5E642; }
+    .star-btn.active svg {
+      filter: drop-shadow(0 0 6px rgba(245,230,66,.6));
+    }
+
+    /* ══ RATING LABEL ════════════════════════════════════════ */
+    .rating-label {
+      font-family: "Share Tech Mono", monospace;
+      font-size: .82rem;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-align: center;
+      min-height: 1.2rem;
+      margin-bottom: 1.4rem;
+      transition: color .2s;
+    }
+
+    /* ══ FORMULARIO CARD ═════════════════════════════════════ */
+    .valoracion-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-top: 3px solid var(--neon-yellow);
+      border-radius: 4px;
+      padding: 2.4rem 2rem;
+      max-width: 660px;
+      margin: 0 auto;
+      box-shadow: 0 0 60px rgba(155,77,255,.12), 0 0 20px rgba(245,230,66,.06);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Corner bracket decoration */
+    .valoracion-card::before {
+      content: "";
+      position: absolute;
+      bottom: 16px; right: 16px;
+      width: 40px; height: 40px;
+      border-bottom: 2px solid rgba(155,77,255,.3);
+      border-right:  2px solid rgba(155,77,255,.3);
+      pointer-events: none;
+    }
+
+    .val-form {
+      display: flex;
+      flex-direction: column;
+      gap: 1.1rem;
+    }
+
+    .val-form .field { margin: 0; }
+
+    /* ══ CHIPS DE ASPECTOS ═══════════════════════════════════ */
+    .aspects-label {
+      font-family: "Share Tech Mono", monospace;
+      font-size: .82rem;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: .55rem;
+      display: block;
+    }
+
+    .aspects-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .5rem;
+    }
+
+    .aspect-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: .35rem;
+      background: rgba(155,77,255,.07);
+      border: 1px solid rgba(155,77,255,.3);
+      border-radius: 2px;
+      padding: .38rem .85rem;
+      font-family: "Share Tech Mono", monospace;
+      font-size: .82rem;
+      letter-spacing: .05em;
+      color: var(--muted);
+      cursor: pointer;
+      user-select: none;
+      transition: background .18s, border-color .18s, color .18s;
+    }
+
+    .aspect-chip input[type="checkbox"] { display: none; }
+
+    .aspect-chip:hover {
+      border-color: rgba(155,77,255,.65);
+      color: var(--text);
+    }
+
+    .aspect-chip.selected {
+      background: rgba(245,230,66,.1);
+      border-color: rgba(245,230,66,.5);
+      color: var(--neon-yellow);
+    }
+
+    .aspect-chip.selected::before {
+      content: "✓ ";
+      font-size: .7rem;
+    }
+
+    /* ══ RECOMENDACIÓN NPS ═══════════════════════════════════ */
+    .nps-track {
+      display: flex;
+      gap: .35rem;
+      flex-wrap: wrap;
+      margin-top: .5rem;
+    }
+
+    .nps-btn {
+      width: 40px; height: 36px;
+      background: rgba(155,77,255,.07);
+      border: 1px solid rgba(155,77,255,.3);
+      border-radius: 2px;
+      color: var(--muted);
+      font-family: "Share Tech Mono", monospace;
+      font-size: .85rem;
+      cursor: pointer;
+      transition: background .15s, border-color .15s, color .15s;
+    }
+
+    .nps-btn:hover {
+      border-color: rgba(155,77,255,.65);
+      color: var(--text);
+    }
+
+    .nps-btn.selected {
+      background: rgba(245,230,66,.12);
+      border-color: var(--neon-yellow);
+      color: var(--neon-yellow);
+      box-shadow: 0 0 8px rgba(245,230,66,.25);
+    }
+
+    .nps-labels {
+      display: flex;
+      justify-content: space-between;
+      margin-top: .4rem;
+      font-family: "Share Tech Mono", monospace;
+      font-size: .72rem;
+      letter-spacing: .05em;
+      color: var(--muted);
+    }
+
+    /* ══ SUBMIT BTN ══════════════════════════════════════════ */
+    .val-submit {
+      width: 100%;
+      margin-top: .4rem;
+      padding: .95rem;
+      font-size: 1rem;
+    }
+
+    /* ══ ÉXITO ═══════════════════════════════════════════════ */
+    .success-state {
+      display: none;
+      text-align: center;
+      padding: 2.5rem 1rem;
+    }
+
+    .success-state.visible { display: block; }
+
+    .success-icon {
+      width: 72px; height: 72px;
+      margin: 0 auto 1.2rem;
+      background: rgba(245,230,66,.08);
+      border: 2px solid rgba(245,230,66,.35);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    .success-title {
+      font-family: "Orbitron", sans-serif;
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: var(--text);
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      margin: 0 0 .5rem;
+    }
+
+    .success-sub {
+      color: var(--muted);
+      font-size: .95rem;
+      margin-bottom: 1.6rem;
+    }
+
+    /* ══ INFO STRIP ══════════════════════════════════════════ */
+    .info-strip {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+      margin-bottom: 2.5rem;
+    }
+
+    .info-strip-item {
+      background: var(--surface);
+      padding: 1.1rem 1.3rem;
+      display: flex;
+      flex-direction: column;
+      gap: .3rem;
+    }
+
+    .info-strip-num {
+      font-family: "Orbitron", sans-serif;
+      font-size: 1.6rem;
+      font-weight: 900;
+      color: var(--neon-yellow);
+      text-shadow: 0 0 10px rgba(245,230,66,.4);
+      line-height: 1;
+    }
+
+    .info-strip-label {
+      font-family: "Share Tech Mono", monospace;
+      font-size: .78rem;
+      letter-spacing: .07em;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+
+    @media (max-width: 600px) {
+      .valoracion-card { padding: 1.6rem 1.1rem; }
+      .info-strip { grid-template-columns: 1fr; }
+      .nps-track { gap: .25rem; }
+      .nps-btn { width: 34px; height: 32px; font-size: .78rem; }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <nav class="container nav">
+       <a class="brand" href="index.html">
+         <img src="Fotos/FixLab_Logo.png" alt="Logo FixLab" class="brand-logo">
+       </a>
+      <button id="menuToggle" class="menu-toggle" aria-label="Abrir menú">Menú</button>
+      <ul id="navLinks" class="nav-links">
+        <li><a href="index.html">Inicio</a></li>
+        <li><a href="servicios.html">Servicios</a></li>
+        <li><a href="calculadora.html">Presupuesto</a></li>
+        <li><a href="tiendas.html">Tiendas físicas</a></li>
+        <li><a href="tienda.html">Tienda</a></li>
+        <li><a href="contacto.html">Contacto</a></li>
+      </ul>
+      <a class="btn btn-login" href="login.html">Iniciar sesión</a>
+    </nav>
+  </header>
+
+  <main class="page-main">
+    <section class="section section-soft">
+      <div class="container">
+
+        <!-- Encabezado -->
+        <span style="
+          display:inline-block;
+          background:rgba(245,230,66,.07);
+          border:1px solid rgba(245,230,66,.28);
+          color:var(--neon-yellow);
+          font-family:'Share Tech Mono',monospace;
+          font-size:.75rem; font-weight:700;
+          text-transform:uppercase; letter-spacing:.1em;
+          padding:.27rem .72rem; border-radius:999px; margin-bottom:.75rem;
+        ">Valoración del servicio</span>
+
+        <h1 class="section-title">¿Ya recogiste tu móvil?</h1>
+        <p class="section-subtitle">
+          Tu opinión nos ayuda a mejorar. Cuéntanos cómo fue tu experiencia en FixLab.
+        </p>
+
+        <!-- Strip de confianza -->
+        <div class="info-strip reveal">
+          <div class="info-strip-item">
+            <span class="info-strip-num">98%</span>
+            <span class="info-strip-label">Clientes satisfechos</span>
+          </div>
+          <div class="info-strip-item">
+            <span class="info-strip-num">&lt;24h</span>
+            <span class="info-strip-label">Tiempo medio de reparación</span>
+          </div>
+          <div class="info-strip-item">
+            <span class="info-strip-num">2</span>
+            <span class="info-strip-label">Tiendas en Valladolid</span>
+          </div>
+        </div>
+
+        <!-- Tarjeta de valoración -->
+        <div class="valoracion-card reveal">
+
+          <!-- Estado de éxito (oculto hasta envío) -->
+          <div class="success-state" id="successState">
+            <div class="success-icon">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none"
+                   stroke="#F5E642" stroke-width="2.5"
+                   stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                <polyline points="22 4 12 14.01 9 11.01"/>
+              </svg>
+            </div>
+            <p class="success-title">¡Gracias por tu valoración!</p>
+            <p class="success-sub">Tu opinión ya está registrada. Nos ayuda a seguir mejorando.</p>
+            <a href="index.html" class="btn btn-primary">Volver al inicio</a>
+          </div>
+
+          <!-- Formulario -->
+          <form class="val-form" id="valoracionForm" novalidate>
+
+            <!-- Estrellas -->
+            <div>
+              <span class="aspects-label">Puntuación general</span>
+              <div class="stars-row" id="starsRow" role="group" aria-label="Puntuación de 1 a 5 estrellas">
+                <!-- Generadas por JS -->
+              </div>
+              <p class="rating-label" id="ratingLabel">Selecciona una puntuación</p>
+              <input type="hidden" name="rating" id="ratingInput" value="">
+            </div>
+
+            <!-- Datos del cliente -->
+            <div class="field">
+              <label for="val-name">Nombre</label>
+              <input id="val-name" name="name" type="text" placeholder="Tu nombre" required>
+            </div>
+
+            <div class="field">
+              <label for="val-store">Tienda visitada</label>
+              <select id="val-store" name="store" required>
+                <option value="">Selecciona tienda</option>
+                <option>FixLab Río Shopping</option>
+                <option>FixLab Centro (Calle Acibelas, 9)</option>
+                <option>FixLab Burgos (Calle Santiago Apóstol, 31)</option>
+              </select>
+            </div>
+
+            <div class="field">
+              <label for="val-service">Servicio realizado</label>
+              <select id="val-service" name="service">
+                <option value="">Selecciona servicio (opcional)</option>
+                <option>Reparación de pantalla</option>
+                <option>Cambio de batería</option>
+                <option>Reparación de conector de carga</option>
+                <option>Reparación de cámara</option>
+                <option>Reparación por daños de agua</option>
+                <option>Diagnóstico gratuito</option>
+                <option>Compra de accesorio</option>
+                <option>Otro</option>
+              </select>
+            </div>
+
+            <!-- Aspectos destacados -->
+            <div>
+              <span class="aspects-label">¿Qué destacarías? (opcional)</span>
+              <div class="aspects-grid">
+                <label class="aspect-chip"><input type="checkbox" name="aspects" value="rapidez"> Rapidez</label>
+                <label class="aspect-chip"><input type="checkbox" name="aspects" value="precio"> Precio justo</label>
+                <label class="aspect-chip"><input type="checkbox" name="aspects" value="atencion"> Atención al cliente</label>
+                <label class="aspect-chip"><input type="checkbox" name="aspects" value="calidad"> Calidad de reparación</label>
+                <label class="aspect-chip"><input type="checkbox" name="aspects" value="garantia"> Garantía ofrecida</label>
+                <label class="aspect-chip"><input type="checkbox" name="aspects" value="limpieza"> Limpieza y presentación</label>
+              </div>
+            </div>
+
+            <!-- Comentario -->
+            <div class="field">
+              <label for="val-comment">Comentario (opcional)</label>
+              <textarea id="val-comment" name="comment" rows="4"
+                placeholder="Cuéntanos tu experiencia con más detalle..."></textarea>
+            </div>
+
+            <!-- NPS -->
+            <div>
+              <span class="aspects-label">¿Nos recomendarías a alguien? (0 = No, 10 = Definitivamente sí)</span>
+              <div class="nps-track" id="npsTrack" role="group" aria-label="Puntuación de recomendación del 0 al 10">
+                <!-- Generados por JS -->
+              </div>
+              <div class="nps-labels">
+                <span>No lo creo</span>
+                <span>Con toda seguridad</span>
+              </div>
+              <input type="hidden" name="nps" id="npsInput" value="">
+            </div>
+
+            <p id="valFormMsg" class="form-message" aria-live="polite"></p>
+
+            <button type="submit" class="btn btn-primary val-submit">Enviar valoración</button>
+          </form>
+
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <p>FixLab S.L. - Reparación de móviles en Valladolid</p>
+      <nav class="footer-links" aria-label="Enlaces del pie">
+        <a href="index.html">Inicio</a>
+        <a href="servicios.html">Servicios</a>
+        <a href="tiendas.html">Tiendas físicas</a>
+        <a href="tienda.html">Tienda</a>
+        <a href="contacto.html">Contacto</a>
+        <a href="aviso-legal.html">Aviso legal</a>
+        <a href="politica-privacidad.html">Privacidad</a>
+        <a href="politica-cookies.html">Cookies</a>
+      </nav>
+      <p>Tres tiendas: Valladolid (Río Shopping y Calle Acibelas, 9) y Burgos (Calle Santiago Apóstol, 31)<br>
+         © <span id="year"></span> FixLab S.L.</p>
+    </div>
+  </footer>
+
+  <a class="whatsapp-float"
+     href="https://wa.me/34600000000?text=Hola%20FixLab%2C%20quiero%20informaci%C3%B3n%20sobre%20una%20reparaci%C3%B3n."
+     target="_blank" rel="noopener noreferrer" aria-label="Contactar por WhatsApp"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg></a>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="assets/js/supabase-config.js"></script>
+  <script src="assets/js/supabase-db.js"></script>
+  <script src="assets/js/script.js"></script>
+  <script>
+    /* ── Estrellas ───────────────────────────────────────────── */
+    const RATING_TEXTS = ["", "Muy mejorable", "Regular", "Bien", "Muy bien", "¡Excelente!"];
+    const starsRow   = document.getElementById("starsRow");
+    const ratingLabel = document.getElementById("ratingLabel");
+    const ratingInput = document.getElementById("ratingInput");
+    let currentRating = 0;
+
+    const starSVG = () => `
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <polygon class="star-fill" points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/>
+        <polygon class="star-stroke" points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/>
+      </svg>`;
+
+    for (let i = 1; i <= 5; i++) {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "star-btn";
+      btn.setAttribute("aria-label", `${i} estrella${i > 1 ? "s" : ""}`);
+      btn.innerHTML = starSVG();
+      btn.dataset.value = i;
+
+      btn.addEventListener("mouseenter", () => highlightStars(i));
+      btn.addEventListener("mouseleave", () => highlightStars(currentRating));
+      btn.addEventListener("click", () => {
+        currentRating = i;
+        ratingInput.value = i;
+        highlightStars(i);
+        ratingLabel.textContent = RATING_TEXTS[i];
+        ratingLabel.style.color = "var(--neon-yellow)";
+      });
+
+      starsRow.appendChild(btn);
+    }
+
+    function highlightStars(upTo) {
+      starsRow.querySelectorAll(".star-btn").forEach((btn, idx) => {
+        btn.classList.toggle("active", idx < upTo);
+      });
+    }
+
+    /* ── NPS ────────────────────────────────────────────────── */
+    const npsTrack = document.getElementById("npsTrack");
+    const npsInput = document.getElementById("npsInput");
+
+    for (let i = 0; i <= 10; i++) {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "nps-btn";
+      btn.textContent = i;
+      btn.setAttribute("aria-label", `${i} de 10`);
+      btn.addEventListener("click", () => {
+        npsInput.value = i;
+        npsTrack.querySelectorAll(".nps-btn").forEach(b => b.classList.remove("selected"));
+        btn.classList.add("selected");
+      });
+      npsTrack.appendChild(btn);
+    }
+
+    /* ── Chips ──────────────────────────────────────────────── */
+    document.querySelectorAll(".aspect-chip").forEach(chip => {
+      chip.addEventListener("click", () => {
+        chip.classList.toggle("selected");
+      });
+    });
+
+    /* ── Submit ─────────────────────────────────────────────── */
+    const valForm    = document.getElementById("valoracionForm");
+    const valFormMsg = document.getElementById("valFormMsg");
+    const successState = document.getElementById("successState");
+    const WEB3FORMS_KEY = "030271c2-e0d6-4f8c-97e1-6b3d78ffc154";
+
+    valForm.addEventListener("submit", async function(e) {
+      e.preventDefault();
+
+      const name    = valForm.querySelector("#val-name").value.trim();
+      const store   = valForm.querySelector("#val-store").value.trim();
+      const rating  = ratingInput.value;
+
+      if (!name) {
+        valFormMsg.textContent = "Introduce tu nombre para continuar.";
+        valFormMsg.style.color = "#FF2D78";
+        return;
+      }
+      if (!store) {
+        valFormMsg.textContent = "Selecciona la tienda que visitaste.";
+        valFormMsg.style.color = "#FF2D78";
+        return;
+      }
+      if (!rating) {
+        valFormMsg.textContent = "Puntúa tu experiencia con las estrellas.";
+        valFormMsg.style.color = "#FF2D78";
+        return;
+      }
+
+      valFormMsg.textContent = "Enviando valoración...";
+      valFormMsg.style.color = "var(--muted)";
+
+      // Recoger aspectos seleccionados
+      const aspects = Array.from(valForm.querySelectorAll(".aspect-chip.selected input"))
+        .map(i => i.value).join(", ") || "Ninguno seleccionado";
+
+      const service = valForm.querySelector("#val-service").value || "No indicado";
+      const comment = valForm.querySelector("#val-comment").value.trim() || "Sin comentario";
+      const nps     = npsInput.value !== "" ? npsInput.value : "No indicado";
+
+      try {
+        const payload = new FormData();
+        payload.append("access_key", WEB3FORMS_KEY);
+        payload.append("subject", `Nueva valoración FixLab — ${rating}★ — ${store}`);
+        payload.append("from_name", "FixLab Valoraciones");
+        payload.append("name", name);
+        payload.append("message",
+          `Valoración recibida\n` +
+          `━━━━━━━━━━━━━━━━━━━━\n` +
+          `Cliente: ${name}\n` +
+          `Tienda: ${store}\n` +
+          `Servicio: ${service}\n` +
+          `Puntuación: ${rating}/5 estrellas\n` +
+          `Aspectos destacados: ${aspects}\n` +
+          `NPS (recomendaría): ${nps}/10\n` +
+          `Comentario: ${comment}`
+        );
+        payload.append("botcheck", "");
+
+        const res  = await fetch("https://api.web3forms.com/submit", { method: "POST", body: payload });
+        const data = await res.json();
+
+        if (!res.ok || !data.success) throw new Error(data.message || "Error al enviar");
+
+        if (window.FixLabSupabaseDB) await window.FixLabSupabaseDB.ready;
+        const review = { name, store, service, rating, aspects, nps, comment, date: new Date().toLocaleDateString("es-ES") };
+        if (window.FixLabSupabaseDB) await window.FixLabSupabaseDB.upsertOne("fixlabReviews", review);
+
+        valForm.style.display = "none";
+        successState.classList.add("visible");
+
+      } catch (err) {
+        valFormMsg.textContent = "No se pudo enviar. Inténtalo de nuevo.";
+        valFormMsg.style.color = "#FF2D78";
+      }
+    });
+  </script>
+</body>
+</html>

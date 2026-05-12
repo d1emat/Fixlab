@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, user-scalable=yes">
+  <title>Reserva tu cita | FixLab S.L.</title>
+  <meta name="description" content="Reserva tu reparación de móvil en FixLab S.L. de forma rápida y sencilla.">
+  <link rel="icon" type="image/png" href="Fotos/FixLab_Logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/styles.css?v=2">
+  <style>
+    /* ══ POP-UP ══════════════════════════════════════════════ */
+    .popup-overlay {
+      position: fixed; inset: 0;
+      background: rgba(10,8,20,0.9);
+      backdrop-filter: blur(6px);
+      z-index: 1000;
+      display: flex; align-items: flex-start; justify-content: center;
+      padding: 3rem 1rem 1rem;
+      opacity: 0; visibility: hidden;
+      transition: opacity .3s ease, visibility .3s ease;
+    }
+    .popup-overlay.active { opacity: 1; visibility: visible; }
+
+    .popup-box {
+      background: #1E1B2E;
+      border: 1px solid rgba(155,77,255,.45);
+      border-top: 3px solid #F5E642;
+      border-radius: 12px;
+      padding: 2.2rem;
+      max-width: 480px; width: 100%;
+      position: relative;
+      box-shadow: 0 0 60px rgba(155,77,255,.2), 0 0 20px rgba(245,230,66,.08);
+      transform: translateY(24px);
+      transition: transform .3s ease;
+      text-align: center;
+    }
+    .popup-overlay.active .popup-box { transform: translateY(0); }
+
+    .popup-close {
+      position: absolute; top: 1rem; right: 1rem;
+      background: rgba(155,77,255,.12);
+      border: 1px solid rgba(155,77,255,.3);
+      color: #F0EEF8;
+      width: 32px; height: 32px; border-radius: 50%;
+      cursor: pointer; font-size: .95rem;
+      display: flex; align-items: center; justify-content: center;
+      transition: background .2s;
+    }
+    .popup-close:hover { background: rgba(155,77,255,.3); }
+
+    .popup-icon {
+      width: 60px; height: 60px; margin: 0 auto 1.1rem;
+      background: rgba(245,230,66,.08);
+      border: 2px solid rgba(245,230,66,.3);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    .popup-title {
+      font-size: 1.3rem; font-weight: 800; color: #F0EEF8;
+      margin: 0 0 .4rem; text-transform: uppercase; letter-spacing: .04em;
+    }
+    .popup-subtitle { color: #9A96B8; font-size: .9rem; margin-bottom: 1.4rem; }
+
+    .popup-code-box {
+      background: rgba(10,8,20,.6);
+      border: 1px solid rgba(245,230,66,.3);
+      border-radius: 8px;
+      padding: 1rem 1.3rem; margin-bottom: 1.4rem; position: relative;
+    }
+    .popup-code-label {
+      font-size: .72rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .1em;
+      color: #9A96B8; margin-bottom: .3rem;
+    }
+    .popup-code-value {
+      font-size: 1.55rem; font-weight: 800; color: #F5E642;
+      letter-spacing: .12em;
+      text-shadow: 0 0 15px rgba(245,230,66,.45);
+      font-family: "Courier New", monospace;
+    }
+    .popup-code-copy {
+      position: absolute; top: .65rem; right: .65rem;
+      background: rgba(245,230,66,.08);
+      border: 1px solid rgba(245,230,66,.25);
+      color: #F5E642; font-size: .7rem; font-weight: 700;
+      padding: .22rem .55rem; border-radius: 4px;
+      cursor: pointer; text-transform: uppercase; letter-spacing: .05em;
+      transition: background .2s;
+    }
+    .popup-code-copy:hover { background: rgba(245,230,66,.18); }
+    .popup-code-copy.copied {
+      color: #4ade80;
+      border-color: rgba(74,222,128,.35);
+      background: rgba(74,222,128,.08);
+    }
+
+    .popup-info {
+      font-size: .86rem; color: #9A96B8;
+      margin-bottom: 1.4rem; line-height: 1.6;
+    }
+    .popup-info strong { color: #F0EEF8; }
+
+    .popup-actions { display: flex; flex-direction: column; gap: .7rem; }
+
+    .popup-btn-primary {
+      display: flex; align-items: center; justify-content: center; gap: .45rem;
+      background: #F5E642; color: #0A0A0F;
+      font-weight: 800; font-size: .92rem;
+      text-transform: uppercase; letter-spacing: .06em;
+      padding: .82rem 1.4rem; border-radius: 6px;
+      text-decoration: none; border: none; cursor: pointer;
+      box-shadow: 0 0 20px rgba(245,230,66,.25);
+      transition: background .2s, box-shadow .2s, transform .2s;
+    }
+    .popup-btn-primary:hover {
+      background: #FFE000;
+      box-shadow: 0 0 35px rgba(245,230,66,.45);
+      transform: translateY(-2px);
+    }
+    .popup-btn-secondary {
+      display: flex; align-items: center; justify-content: center;
+      background: transparent; color: #F0EEF8;
+      font-weight: 600; font-size: .88rem;
+      padding: .75rem 1.4rem; border-radius: 6px;
+      text-decoration: none;
+      border: 1px solid rgba(155,77,255,.35);
+      cursor: pointer;
+      transition: background .2s, border-color .2s;
+    }
+    .popup-btn-secondary:hover {
+      background: rgba(155,77,255,.1);
+      border-color: rgba(155,77,255,.65);
+    }
+
+    /* ══ CTA VALORACIÓN ══════════════════════════════════════ */
+    .valoracion-cta {
+      margin-top: 3.5rem;
+      padding: 2.2rem 2rem;
+      background: var(--surface, #1a3f7a);
+      border: 1px solid rgba(155,77,255,.35);
+      border-top: 3px solid #F5E642;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .valoracion-cta::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(245,230,66,.03) 0%, transparent 60%);
+      pointer-events: none;
+    }
+
+    .valoracion-cta::after {
+      content: "";
+      position: absolute;
+      bottom: 12px; right: 12px;
+      width: 36px; height: 36px;
+      border-bottom: 2px solid rgba(155,77,255,.25);
+      border-right:  2px solid rgba(155,77,255,.25);
+      pointer-events: none;
+    }
+
+    .valoracion-cta-text { flex: 1; min-width: 200px; }
+
+    .valoracion-cta-badge {
+      display: inline-block;
+      background: rgba(245,230,66,.07);
+      border: 1px solid rgba(245,230,66,.28);
+      color: #F5E642;
+      font-family: "Share Tech Mono", monospace;
+      font-size: .72rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: .1em;
+      padding: .22rem .65rem; border-radius: 999px;
+      margin-bottom: .55rem;
+    }
+
+    .valoracion-cta h2 {
+      font-family: "Orbitron", sans-serif;
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: #F0EEF8;
+      margin: 0 0 .35rem;
+      letter-spacing: .03em;
+      text-transform: uppercase;
+    }
+
+    .valoracion-cta p {
+      color: #9A96B8;
+      font-size: .9rem;
+      margin: 0;
+      line-height: 1.6;
+    }
+
+    .val-cta-stars {
+      display: flex;
+      gap: .2rem;
+      margin-bottom: .45rem;
+    }
+
+    .val-cta-stars span {
+      color: #F5E642;
+      font-size: 1.15rem;
+      text-shadow: 0 0 8px rgba(245,230,66,.5);
+    }
+
+    @media (max-width: 600px) {
+      .popup-overlay { padding: 1.5rem 1rem 1rem; }
+      .popup-box { padding: 1.5rem 1.1rem; }
+      .popup-code-value { font-size: 1.25rem; }
+      .valoracion-cta { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <nav class="container nav">
+       <a class="brand" href="index.html">
+         <img src="Fotos/FixLab_Logo.png" alt="Logo FixLab" class="brand-logo">
+       </a>
+      <button id="menuToggle" class="menu-toggle" aria-label="Abrir menú">Menú</button>
+      <ul id="navLinks" class="nav-links">
+        <li><a href="index.html">Inicio</a></li>
+        <li><a href="servicios.html">Servicios</a></li>
+        <li><a href="calculadora.html">Presupuesto</a></li>
+        <li><a href="tiendas.html">Tiendas físicas</a></li>
+        <li><a href="tienda.html">Tienda</a></li>
+        <li><a href="reserva.html">Reserva</a></li>
+        <li><a href="seguimiento-publico.html">Seguimiento</a></li>
+        <li><a href="contacto.html">Contacto</a></li>
+      </ul>
+        <div style="display:flex; gap:0.5rem; align-items:center;">
+          <a class="btn btn-login" href="login.html">Iniciar sesión</a>
+        </div>
+    </nav>
+  </header>
+
+  <main class="page-main">
+    <section class="section section-soft">
+      <div class="container">
+
+        <h1 class="section-title">Reserva tu reparación</h1>
+        <p class="section-subtitle">Déjanos tus datos y te llamamos para confirmar día y hora.</p>
+
+        <!-- ── FORMULARIO DE RESERVA ── -->
+        <form id="reservationForm" class="contact-form" novalidate>
+          <div class="field">
+            <label for="name">Nombre</label>
+            <input id="name" name="name" type="text" required>
+          </div>
+          <div class="field">
+            <label for="email">Email</label>
+            <input id="email" name="email" type="email" required>
+          </div>
+          <div class="field">
+            <label for="phone">Teléfono</label>
+            <input id="phone" name="phone" type="tel" required>
+          </div>
+          <div class="field">
+            <label for="deviceBrand">Marca del móvil</label>
+            <select id="deviceBrand" name="deviceBrand" required>
+              <option value="">Selecciona marca</option>
+              <option>Apple (iPhone)</option>
+              <option>Samsung</option>
+              <option>Xiaomi</option>
+              <option>Huawei</option>
+              <option>OPPO</option>
+              <option>Realme</option>
+              <option>Otra marca</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="service">Servicio</label>
+            <select id="service" name="service" required>
+              <option value="">Selecciona un servicio</option>
+              <option>Reparación de pantalla</option>
+              <option>Cambio de batería</option>
+              <option>Reparación de conector de carga</option>
+              <option>Reparación de cámara</option>
+              <option>Reparación por daños de agua</option>
+              <option>Diagnóstico gratuito</option>
+              <option>Otro servicio</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="urgency">Prioridad</label>
+            <select id="urgency" name="urgency" required>
+              <option value="">Selecciona prioridad</option>
+              <option>Normal (24-48h)</option>
+              <option>Urgente (mismo día si es posible)</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="preferredStore">Tienda preferida</label>
+            <select id="preferredStore" name="preferredStore" required>
+              <option value="">Selecciona tienda</option>
+              <option value="Centro">FixLab Centro (Calle Acibelas, 9)</option>
+              <option value="Río Shopping">FixLab Río Shopping</option>
+              <option value="Burgos">FixLab Burgos (Calle Santiago Apóstol, 31)</option>
+            </select>
+          </div>
+          <div class="field field-full">
+            <label for="message">Descripción de la causa</label>
+            <textarea id="message" name="message" rows="5"
+              placeholder="Modelo exacto, fallo detectado, cuándo empezó y cualquier detalle útil."
+              required></textarea>
+          </div>
+          <button class="btn btn-primary" type="submit">Enviar reserva</button>
+          <p id="reservationMessage" class="form-message" aria-live="polite"></p>
+        </form>
+
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <p>FixLab S.L. - Reparación de móviles en Valladolid</p>
+      <nav class="footer-links" aria-label="Enlaces del pie">
+        <a href="index.html">Inicio</a>
+        <a href="servicios.html">Servicios</a>
+        <a href="tiendas.html">Tiendas físicas</a>
+        <a href="tienda.html">Tienda</a>
+        <a href="contacto.html">Contacto</a>
+        <a href="seguimiento-publico.html">Seguimiento</a>
+        <a href="aviso-legal.html">Aviso legal</a>
+        <a href="politica-privacidad.html">Privacidad</a>
+        <a href="politica-cookies.html">Cookies</a>
+      </nav>
+      <p>Tres tiendas: Valladolid (Río Shopping y Calle Acibelas, 9) y Burgos (Calle Santiago Apóstol, 31)<br>
+         © <span id="year"></span> FixLab S.L.</p>
+    </div>
+  </footer>
+
+  <a class="whatsapp-float"
+     href="https://wa.me/34600000000?text=Hola%20FixLab%2C%20quiero%20informaci%C3%B3n%20sobre%20una%20reparaci%C3%B3n."
+     target="_blank" rel="noopener noreferrer" aria-label="Contactar por WhatsApp"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/></svg></a>
+
+  <!-- ══ POP-UP DE CONFIRMACIÓN ══════════════════════════════ -->
+  <div class="popup-overlay" id="confirmPopup" role="dialog" aria-modal="true" aria-labelledby="popupTitle">
+    <div class="popup-box">
+      <button class="popup-close" id="popupClose" aria-label="Cerrar">✕</button>
+
+      <div class="popup-icon">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none"
+             stroke="#F5E642" stroke-width="2.5"
+             stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+          <polyline points="22 4 12 14.01 9 11.01"/>
+        </svg>
+      </div>
+
+      <p class="popup-title" id="popupTitle">¡Reserva enviada!</p>
+      <p class="popup-subtitle">
+        Guarda tu código de seguimiento. Lo necesitarás para consultar
+        el estado de tu reparación en cualquier momento.
+      </p>
+
+      <div class="popup-code-box">
+        <p class="popup-code-label">Tu código de reparación</p>
+        <p class="popup-code-value" id="popupCode">FL-2025-0000</p>
+        <button class="popup-code-copy" id="copyCodeBtn" type="button">Copiar</button>
+      </div>
+
+      <p class="popup-info">
+        Usa este código junto con tu <strong>número de teléfono</strong> en la
+        sección de <strong>Seguimiento</strong> para ver el estado de tu
+        reparación en tiempo real.
+      </p>
+
+      <div class="popup-actions">
+        <a href="seguimiento-publico.html" class="popup-btn-primary" id="popupTrackBtn">
+          Ver seguimiento
+        </a>
+        <button class="popup-btn-secondary" id="popupCloseBottom" type="button">
+          Cerrar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="assets/js/supabase-config.js"></script>
+  <script src="assets/js/supabase-db.js"></script>
+  <script src="assets/js/script.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      // Popup logic
+      var popup     = document.getElementById("confirmPopup");
+      var codeEl    = document.getElementById("popupCode");
+      var closeBtn  = document.getElementById("popupClose");
+      var closeBot  = document.getElementById("popupCloseBottom");
+      var copyBtn   = document.getElementById("copyCodeBtn");
+
+      function openPopup(code) {
+        codeEl.textContent = code;
+        popup.classList.add("active");
+        document.body.style.overflow = "hidden";
+      }
+      function closePopup() {
+        popup.classList.remove("active");
+        document.body.style.overflow = "";
+      }
+
+      closeBtn.addEventListener("click", closePopup);
+      closeBot.addEventListener("click", closePopup);
+      popup.addEventListener("click", function(e) { if (e.target === popup) closePopup(); });
+      document.addEventListener("keydown", function(e) { if (e.key === "Escape") closePopup(); });
+
+      copyBtn.addEventListener("click", function() {
+        navigator.clipboard.writeText(codeEl.textContent).then(function() {
+          copyBtn.textContent = "¡Copiado!";
+          copyBtn.classList.add("copied");
+          setTimeout(function() {
+            copyBtn.textContent = "Copiar";
+            copyBtn.classList.remove("copied");
+          }, 2000);
+        });
+      });
+
+      // Reservation form logic
+      var form = document.getElementById("reservationForm");
+      if (form) {
+        form.addEventListener("submit", async function(e) {
+          e.preventDefault();
+
+          var name    = form.querySelector("#name").value.trim();
+          var email   = form.querySelector("#email").value.trim();
+          var phone   = form.querySelector("#phone").value.trim();
+          var brand   = form.querySelector("#deviceBrand").value.trim();
+          var service = form.querySelector("#service").value.trim();
+          var urgency = form.querySelector("#urgency").value.trim();
+          var store   = form.querySelector("#preferredStore").value.trim();
+          var message = form.querySelector("#message").value.trim();
+          var msgEl   = form.querySelector("#reservationMessage");
+
+          if (!name || !phone || !service) {
+            msgEl.textContent = "Completa al menos nombre, teléfono y servicio.";
+            msgEl.style.color = "#FF2D78";
+            return;
+          }
+
+          var submitBtn = form.querySelector("button[type=submit]");
+          submitBtn.disabled = true;
+          msgEl.textContent = "Enviando reserva...";
+          msgEl.style.color = "#9A96B8";
+
+          var code = "FL-" + new Date().getFullYear() + "-" + Math.floor(1000 + Math.random() * 9000);
+
+          // ── Guardar en Supabase ──────────────────────────────────
+          try {
+            if (window.FixLabSupabaseDB) {
+              await window.FixLabSupabaseDB.ready;
+              await window.FixLabSupabaseDB.upsertOne("fixlab_db_reservations", {
+                _id:         code,
+                orderNumber: code,
+                code:        code,
+                phone:       phone,
+                name:        name,
+                email:       email || "",
+                brand:       brand,
+                service:     service,
+                urgency:     urgency,
+                store:       store,
+                message:     message,
+                status:      "Solicitud recibida",
+                createdAt:   new Date().toISOString(),
+              });
+            }
+          } catch (err) {
+            console.error("Error al guardar reserva:", err);
+            msgEl.textContent = "Error al guardar la reserva. Inténtalo de nuevo.";
+            msgEl.style.color = "#FF2D78";
+            submitBtn.disabled = false;
+            return;
+          }
+
+          // ── Email (web3forms) ────────────────────────────────────
+          try {
+            const WEB3FORMS_KEY = "030271c2-e0d6-4f8c-97e1-6b3d78ffc154";
+            const payload = new FormData();
+            payload.append("access_key", WEB3FORMS_KEY);
+            payload.append("subject", `Nueva reserva FixLab \u2014 ${code} \u2014 ${store}`);
+            payload.append("from_name", "FixLab Reservas");
+            payload.append("name", name);
+            payload.append("message",
+              "Reserva recibida\n" +
+              "\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\n" +
+              "C\u00f3digo: " + code + "\n" +
+              "Cliente: " + name + "\n" +
+              "Tel\u00e9fono: " + phone + "\n" +
+              "Email: " + (email || "No indicado") + "\n" +
+              "Marca: " + (brand || "No indicada") + "\n" +
+              "Servicio: " + service + "\n" +
+              "Prioridad: " + (urgency || "No indicada") + "\n" +
+              "Tienda: " + (store || "No indicada") + "\n" +
+              "Descripci\u00f3n: " + (message || "Sin detalles.")
+            );
+            payload.append("botcheck", "");
+            await fetch("https://api.web3forms.com/submit", { method: "POST", body: payload });
+          } catch (_) {}
+
+          msgEl.textContent = "";
+          submitBtn.disabled = false;
+          form.reset();
+          openPopup(code);
+        });
+      }
+    });
+  </script>
+</body>
+</html>

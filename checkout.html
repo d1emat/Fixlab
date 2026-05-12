@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5.0, user-scalable=yes">
+  <title>Finalizar Compra | FixLab S.L.</title>
+  <link rel="icon" type="image/png" href="Fotos/FixLab_Logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/styles.css?v=2">
+  <style>
+    .checkout-container {
+      display: grid;
+      grid-template-columns: 1fr 400px;
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+    .order-summary {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 2rem;
+      height: fit-content;
+      position: sticky;
+      top: 100px;
+    }
+    .product-review {
+      display: flex;
+      gap: 1.5rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 1.5rem;
+    }
+    .product-review img {
+      width: 100px;
+      height: 100px;
+      object-fit: cover;
+      border-radius: 8px;
+      background: var(--surface-2);
+    }
+    .price-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.75rem;
+      color: var(--muted);
+    }
+    .price-total {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 1.5rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+      font-family: "Orbitron", sans-serif;
+      font-size: 1.4rem;
+      color: var(--neon-yellow);
+    }
+    @media (max-width: 900px) {
+      .checkout-container { grid-template-columns: 1fr; }
+      .order-summary { position: static; }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <nav class="container nav">
+       <a class="brand" href="index.html">
+         <img src="Fotos/FixLab_Logo.png" alt="Logo FixLab" class="brand-logo">
+       </a>
+       <ul class="nav-links">
+         <li><a href="index.html">Inicio</a></li>
+         <li><a href="tienda.html">Volver a Tienda</a></li>
+       </ul>
+    </nav>
+  </header>
+
+  <main class="page-main">
+    <section class="section">
+      <div class="container">
+        <h1 class="section-title">Finalizar Pedido</h1>
+        
+        <div class="checkout-container">
+          <!-- Formulario -->
+          <div class="glass-card" style="padding: 2.5rem;">
+            <h2 style="margin-bottom: 1.5rem; font-family: Orbitron;">Datos de Envío</h2>
+            <form id="checkoutForm" class="grid-form">
+              <div class="field">
+                <label for="orderName">Nombre completo</label>
+                <input type="text" id="orderName" required placeholder="Nombre y apellidos">
+              </div>
+              <div class="field">
+                <label for="orderEmail">Email</label>
+                <input type="email" id="orderEmail" required placeholder="tu@email.com">
+              </div>
+              <div class="field">
+                <label for="orderPhone">Teléfono</label>
+                <input type="tel" id="orderPhone" required placeholder="Tu número de contacto">
+              </div>
+              <div class="field">
+                <label for="orderAddress">Dirección de entrega</label>
+                <input type="text" id="orderAddress" required placeholder="Calle, número, piso...">
+                </div>
+          
+          <div style="margin-top: 2rem; text-align: center;">
+            <p class="muted" style="margin-bottom: 1rem;">¿Cómo ha sido tu experiencia?</p>
+            <a href="valoracion.html" class="btn btn-primary" style="background: var(--neon-yellow); color: #000; border: none;">
+              Dejar una valoración
+            </a>
+          </div>
+        </div>
+              <div class="field">
+                <label for="orderCity">Ciudad</label>
+                <input type="text" id="orderCity" required placeholder="Población">
+              </div>
+              <div class="field">
+                <label for="orderZip">Código Postal</label>
+                <input type="text" id="orderZip" required placeholder="CP">
+              </div>
+              
+              <div class="field-full" style="margin-top: 2rem;">
+                <h2 style="margin-bottom: 1.5rem; font-family: Orbitron;">Método de Pago</h2>
+                <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                  <label class="card" style="flex: 1; padding: 1rem; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; border: 1px solid var(--neon-cyan);">
+                    <input type="radio" name="payment" value="tarjeta" checked>
+                    <span>Tarjeta de Crédito</span>
+                  </label>
+                  <label class="card" style="flex: 1; padding: 1rem; cursor: pointer; display: flex; align-items: center; gap: 0.5rem;">
+                    <input type="radio" name="payment" value="contrareembolso">
+                    <span>Contra reembolso</span>
+                  </label>
+                </div>
+              </div>
+
+              <div style="grid-column: 1 / -1; margin-top: 2rem;">
+                <button type="submit" class="btn btn-primary" style="width: 100%; padding: 1.2rem; font-size: 1.1rem;">
+                  CONFIRMAR COMPRA
+                </button>
+                <p id="checkoutMsg" class="form-message" style="text-align: center; margin-top: 1rem;"></p>
+              </div>
+            </form>
+          </div>
+
+          <!-- Resumen -->
+          <div class="order-summary">
+            <h2 style="margin-bottom: 1.5rem; font-family: Orbitron; font-size: 1.2rem;">Resumen</h2>
+            <div id="productSummary">
+              <!-- Cargado por JS -->
+            </div>
+            <div class="price-row">
+              <span>Subtotal</span>
+              <span id="summarySubtotal">0.00€</span>
+            </div>
+            <div class="price-row">
+              <span>Envío</span>
+              <span style="color: var(--neon-cyan);">GRATIS</span>
+            </div>
+            <div class="price-total">
+              <span>Total</span>
+              <span id="summaryTotal">0.00€</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div class="popup-overlay" id="orderPopup">
+    <div class="popup-box">
+      <div class="popup-icon">✅</div>
+      <h2 class="popup-title">¡Pedido Confirmado!</h2>
+      <p class="popup-subtitle">Gracias por tu compra. Hemos registrado tu pedido correctamente.</p>
+      <div class="popup-code-box">
+        <p class="popup-code-label">Número de Pedido</p>
+        <p class="popup-code-value" id="orderCode">#ORD-0000</p>
+      </div>
+      <div class="popup-actions">
+        <a href="valoracion.html" class="popup-btn-primary" style="background: var(--neon-yellow);">Valorar experiencia</a>
+        <a href="tienda.html" class="popup-btn-primary">Seguir comprando</a>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="assets/js/supabase-config.js"></script>
+  <script src="assets/js/supabase-db.js"></script>
+  <script src="assets/js/script.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const productId = urlParams.get('id');
+      
+      // Intentar encontrar el producto en el HTML de tienda o usar datos locales
+      // Para esta demo, simularemos la carga del producto
+      const products = {
+        'iphone-12': { name: 'iPhone 12 reacondicionado', price: 299, img: 'https://fdn2.gsmarena.com/vv/bigpic/apple-iphone-12.jpg' },
+        'iphone-14-pro': { name: 'iPhone 14 Pro reacondicionado', price: 449, img: 'https://fdn2.gsmarena.com/vv/bigpic/apple-iphone-14-pro.jpg' },
+        'iphone-15': { name: 'iPhone 15 reacondicionado', price: 579, img: 'https://fdn2.gsmarena.com/vv/bigpic/apple-iphone-15.jpg' },
+        'samsung-s23': { name: 'Samsung Galaxy S23 reacondicionado', price: 289, img: 'https://fdn2.gsmarena.com/vv/bigpic/samsung-galaxy-s23-5g.jpg' },
+        'samsung-s24-ultra': { name: 'Samsung Galaxy S24 Ultra reacondicionado', price: 329, img: 'Imagenes tienda/Foto_s24.png' },
+        'xiaomi-13t': { name: 'Xiaomi 13T reacondicionado', price: 269, img: 'https://fdn2.gsmarena.com/vv/bigpic/xiaomi-13t.jpg' },
+        'fundas-antigolpes': { name: 'Funda Antigolpes', price: 14.90, img: 'Imagenes tienda/Foto_funda_1.jpg' },
+        'protector-templado': { name: 'Protector Templado', price: 12.00, img: 'Imagenes tienda/foto_protector_pantalla_1.jpg' }
+      };
+
+      const product = products[productId] || products['iphone-12']; // Fallback
+      
+      const summaryEl = document.getElementById('productSummary');
+      summaryEl.innerHTML = `
+        <div class="product-review">
+          <img src="${product.img}" alt="${product.name}">
+          <div>
+            <h4 style="margin-bottom: 0.5rem;">${product.name}</h4>
+            <p class="price-tag">${product.price.toFixed(2)}€</p>
+          </div>
+        </div>
+      `;
+      
+      document.getElementById('summarySubtotal').textContent = product.price.toFixed(2) + '€';
+      document.getElementById('summaryTotal').textContent = product.price.toFixed(2) + '€';
+
+      const checkoutForm = document.getElementById('checkoutForm');
+      checkoutForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const orderCode = 'ORD-' + Math.floor(1000 + Math.random() * 9000);
+        let customerEmail = document.getElementById('orderEmail').value;
+        
+        if (!customerEmail && window.FixLabDB) {
+          const sessionData = FixLabDB.getCollection(FixLabDB.collections.SESSION);
+          if (Array.isArray(sessionData) && sessionData.length > 0) customerEmail = sessionData[0].email;
+        }
+
+        const orderData = {
+          orderNumber: orderCode,
+          type: 'PRODUCT_ORDER',
+          productName: product.name,
+          total: product.price,
+          customerName: document.getElementById('orderName').value,
+          customerEmail: customerEmail,
+          customerPhone: document.getElementById('orderPhone').value,
+          address: `${document.getElementById('orderAddress').value}, ${document.getElementById('orderZip').value} ${document.getElementById('orderCity').value}`,
+          status: 'Pendiente de envío',
+          createdAt: new Date().toISOString()
+        };
+
+        if (window.FixLabSupabaseDB) await window.FixLabSupabaseDB.ready;
+        if (window.FixLabDB) FixLabDB.insert(FixLabDB.collections.RESERVATIONS, orderData);
+
+        document.getElementById('orderCode').textContent = '#' + orderCode;
+        document.getElementById('orderPopup').classList.add('active');
+      });
+    });
+  </script>
+</body>
+</html>

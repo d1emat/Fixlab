@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Servicios | FixLab</title>
+  <link rel="icon" type="image/png" href="../Fotos/FixLab_Logo.png">
+  <link rel="stylesheet" href="../assets/css/styles.css?v=6">
+</head>
+<body>
+  <header class="site-header">
+    <nav class="container nav">
+      <a class="brand" href="index.html"><img src="../Fotos/FixLab_Logo.png" alt="FixLab" class="brand-logo"></a>
+      <button id="menuToggle" class="menu-toggle">Menú</button>
+      <ul id="navLinks" class="nav-links">
+        <li><a href="index.html">Inicio</a></li>
+        <li><a href="servicios.html" class="active">Servicios</a></li>
+        <li><a href="tiendas.html">Tiendas</a></li>
+        <li><a href="tienda.html">Tienda</a></li>
+        <li><a href="contacto.html">Contacto</a></li>
+      </ul>
+      <a class="btn" href="login.html">Iniciar sesión</a>
+    </nav>
+  </header>
+  <main class="page-main">
+    <section class="section">
+      <div class="container">
+        <h1 class="section-title">Servicios de reparación</h1>
+        <p class="section-subtitle">Rapidez, calidad y garantía.</p>
+        <div class="services-grid">
+          <a href="servicio-pantalla.html" class="card card-link">
+            <img src="../Fotos servicios/Reparación_Pantalla.png" alt="Pantalla">
+            <h3>Reparación de pantalla</h3>
+            <p>Sustitución precisa de pantallas rotas o sin respuesta táctil.</p>
+            <span class="price-tag">Desde 69€</span>
+          </a>
+          <a href="servicio-bateria.html" class="card card-link">
+            <img src="../Fotos servicios/cambio_bateria.png" alt="Batería">
+            <h3>Cambio de batería</h3>
+            <p>Baterías de alto rendimiento para mayor autonomía.</p>
+            <span class="price-tag">Desde 49€</span>
+          </a>
+          <a href="servicio-conector.html" class="card card-link">
+            <img src="../Fotos servicios/reparacion_carga.png" alt="Carga">
+            <h3>Conector de carga</h3>
+            <p>Arreglo del puerto para carga estable y segura.</p>
+            <span class="price-tag">Desde 39€</span>
+          </a>
+          <a href="servicio-camara.html" class="card card-link">
+            <img src="../Fotos servicios/reparación-camara.png" alt="Cámara">
+            <h3>Reparación de cámara</h3>
+            <p>Solución de enfoque, nitidez o fallo total de cámara.</p>
+            <span class="price-tag">Desde 55€</span>
+          </a>
+          <a href="servicio-agua.html" class="card card-link">
+            <img src="../Fotos servicios/daños_por_agua.png" alt="Agua">
+            <h3>Daños por agua</h3>
+            <p>Limpieza técnica y recuperación tras contacto con líquidos.</p>
+            <span class="price-tag">Desde 59€</span>
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+  <footer class="site-footer">
+    <div class="container">
+      <nav class="footer-links">
+        <a href="index.html">Inicio</a><a href="servicios.html">Servicios</a><a href="tiendas.html">Tiendas</a><a href="tienda.html">Tienda</a><a href="aviso-legal.html">Legal</a>
+      </nav>
+      <p>© <span id="year"></span> FixLab</p>
+    </div>
+  </footer>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="../assets/js/supabase-config.js"></script>
+  <script src="../assets/js/supabase-db.js"></script>
+  <script src="../assets/js/script.js"></script>
+</body>
+</html>
