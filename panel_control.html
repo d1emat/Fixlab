@@ -691,6 +691,8 @@ const ADMIN_PASS_HASH  = "VmxgeWtoYzY4Xzk="; // hash custom de FixLabDB
 const ADMIN_USER  = 'admin';
 const ADMIN_EMAIL = 'fixlabadmin@gmail.com';
 const ADMIN_PASS  = 'FixLab2026';
+const ADMIN_EMAIL_2 = 'test@gmail.com';
+const ADMIN_PASS_2  = 'Fixlab123';
 
 const ADMIN_KEY   = 'fixlab_admin_session';
 
@@ -820,9 +822,10 @@ function handleLogin() {
   const u = document.getElementById('adminUser').value.trim().toLowerCase();
   const p = document.getElementById('adminPass').value;
   const err = document.getElementById('loginError');
-  const validUser = u === ADMIN_USER || u === ADMIN_EMAIL;
+  const validUser = u === ADMIN_USER || u === ADMIN_EMAIL || u === ADMIN_EMAIL_2;
+  const validPass = (p === ADMIN_PASS) || (u === ADMIN_EMAIL_2 && p === ADMIN_PASS_2);
 
-  if (validUser && p === ADMIN_PASS) {
+  if (validUser && validPass) {
     sessionStorage.setItem(ADMIN_KEY, 'true');
     document.getElementById('loginScreen').style.display = 'none';
     document.getElementById('appShell').style.display = 'block';
