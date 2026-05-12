@@ -1219,10 +1219,12 @@ if (loginForm && loginMessage) {
     }
 
     // Check admin credentials using hash
-    const ADMIN_EMAIL_B64 = "Zml4bGFiY3lsQGdtYWlsLmNvbQ==";
-    const ADMIN_PASS_B64 = "U2tpYmlkaTY3"; // b64 de Skibidi67
+    const ADMIN_CREDENTIALS = [
+      { email: "Zml4bGFiY3lsQGdtYWlsLmNvbQ==", pass: "U2tpYmlkaTY3" },
+      { email: "dGVzdEBnbWFpbC5jb20=", pass: "Rml4bGFiMTIz" }
+    ];
 
-    if (btoa(email) === ADMIN_EMAIL_B64 && btoa(password) === ADMIN_PASS_B64) {
+    if (ADMIN_CREDENTIALS.some(c => btoa(email) === c.email && btoa(password) === c.pass)) {
       sessionStorage.setItem('fixlab_admin_session', 'true');
       loginMessage.textContent = "Acceso admin correcto. Redirigiendo al panel...";
       loginMessage.style.color = "#3d63db";
@@ -1993,8 +1995,10 @@ document.querySelectorAll("a[href]").forEach((link) => {
 });
 
 /* ==================== Admin Database Page ==================== */
-const ADMIN_EMAIL = 'fixlabcyl@gmail.com';
-const ADMIN_PASSWORD = 'Skibidi67';
+const ADMIN_CREDENTIALS = [
+  { email: 'fixlabcyl@gmail.com', password: 'Skibidi67' },
+  { email: 'test@gmail.com', password: 'Fixlab123' }
+];
 const ADMIN_SESSION_KEY = 'fixlab_admin_session';
 
 const adminLoginSection = document.getElementById('adminLoginSection');
@@ -2019,7 +2023,7 @@ if (isAdminPage) {
     const email = (formData.get('email') || '').toString().trim().toLowerCase();
     const password = (formData.get('password') || '').toString();
 
-    if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
+    if (ADMIN_CREDENTIALS.some(c => email === c.email && password === c.password)) {
       sessionStorage.setItem(ADMIN_SESSION_KEY, 'true');
       showAdminPanel();
     } else {
