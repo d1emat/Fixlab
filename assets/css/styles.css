@@ -789,9 +789,10 @@ z-index: 1;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 1.5rem;
+  padding: 1.5rem;
   background: var(--border);
   border: 2px solid var(--border);
-  border-radius: 8px;
+  border-radius: 12px;
   overflow: hidden;
 }
 
