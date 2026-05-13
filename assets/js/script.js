@@ -3305,20 +3305,35 @@ document.addEventListener("DOMContentLoaded", () => {
 
   let mouseX = 0, mouseY = 0;
   let currentX = 0, currentY = 0;
+  let isAnimatingGlow = false;
+
+  function animateGlow() {
+    const easing = 0.15;
+    const dx = mouseX - currentX;
+    const dy = mouseY - currentY;
+    
+    currentX += dx * easing;
+    currentY += dy * easing;
+    
+    glow.style.transform = `translate3d(${currentX}px, ${currentY}px, 0) translate(-50%, -50%)`;
+    
+    // Si la distancia es pequeña, dejamos de animar para ahorrar CPU
+    if (Math.abs(dx) > 0.1 || Math.abs(dy) > 0.1) {
+      requestAnimationFrame(animateGlow);
+    } else {
+      isAnimatingGlow = false;
+    }
+  }
 
   window.addEventListener("mousemove", (e) => {
     mouseX = e.clientX;
     mouseY = e.clientY;
+    
+    if (!isAnimatingGlow) {
+      isAnimatingGlow = true;
+      requestAnimationFrame(animateGlow);
+    }
   }, { passive: true });
-
-  function animateGlow() {
-    const easing = 0.15;
-    currentX += (mouseX - currentX) * easing;
-    currentY += (mouseY - currentY) * easing;
-    glow.style.transform = `translate3d(${currentX}px, ${currentY}px, 0) translate(-50%, -50%)`;
-    requestAnimationFrame(animateGlow);
-  }
-  requestAnimationFrame(animateGlow);
 
   // 3. SPLASH SCREEN — se mantiene hasta que FixLabDB confirme que Supabase cargó
   const splash = document.querySelector(".splash-screen");
@@ -3354,10 +3369,10 @@ document.addEventListener("DOMContentLoaded", () => {
         closeSplash();
       }, { once: true });
 
-      // Timeout de seguridad: si Supabase tarda más de 8s, cerrar igualmente
+      // Timeout de seguridad: si Supabase tarda más de 3s, cerrar igualmente
       setTimeout(() => {
         if (!FixLabDB._ready) closeSplash();
-      }, 8000);
+      }, 3000);
     }
   }
 
