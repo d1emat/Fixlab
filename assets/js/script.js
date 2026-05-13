@@ -688,28 +688,28 @@ const PRODUCT_CATALOG = {
     price: 299,
     description: "iPhone revisado en 30 puntos, bateria optimizada y desbloqueado.",
     specs: "128GB · Pantalla OLED · Face ID · Garantia 12 meses",
-    images: ["https://fdn2.gsmarena.com/vv/bigpic/apple-iphone-12.jpg"]
+    images: ["Imagenes%20tienda/Iphone12-azul-tienda.png"]
   },
   "iphone-14-pro": {
     name: "iPhone 14 Pro reacondicionado",
     price: 449,
     description: "Version premium reacondicionada con camaras y rendimiento de alta gama.",
     specs: "128GB · ProMotion 120Hz · Triple camara · Garantia 12 meses",
-    images: ["https://fdn2.gsmarena.com/vv/bigpic/apple-iphone-14-pro.jpg"]
+    images: ["Imagenes%20tienda/apple-iphone-14-pro-plata-tienda.png"]
   },
   "iphone-15": {
     name: "iPhone 15 reacondicionado",
     price: 579,
     description: "Modelo reciente con USB-C, excelente autonomia y estado impecable.",
     specs: "128GB · USB-C · Camara 48MP · Garantia 12 meses",
-    images: ["https://fdn2.gsmarena.com/vv/bigpic/apple-iphone-15.jpg"]
+    images: ["Imagenes%20tienda/apple_iphone_15_rosa-tienda.png"]
   },
   "samsung-s23": {
     name: "Samsung Galaxy S23 reacondicionado",
     price: 289,
     description: "Movil equilibrado con pantalla AMOLED y gran rendimiento.",
     specs: "128GB · AMOLED 120Hz · Carga rapida · Garantia 12 meses",
-    images: ["https://fdn2.gsmarena.com/vv/bigpic/samsung-galaxy-s23-5g.jpg"]
+    images: ["Imagenes%20tienda/s23-rosa-tienda.png"]
   },
   "samsung-s24-ultra": {
     name: "Samsung Galaxy S24 Ultra reacondicionado",
@@ -718,33 +718,40 @@ const PRODUCT_CATALOG = {
     specs: "256GB · AMOLED 120Hz · Triple camara · Garantia 12 meses",
     images: ["Imagenes%20tienda/Foto_s24.png"]
   },
+  "nothing-phone-1": {
+    name: "Nothing Phone (1) reacondicionado",
+    price: 319,
+    description: "Diseño unico con interfaz Glyph y Android puro.",
+    specs: "128GB · Pantalla OLED 120Hz · Carga inalambrica · Garantia 12 meses",
+    images: ["Imagenes%20tienda/Nothing-Phone-1.png"]
+  },
   "xiaomi-13t": {
     name: "Xiaomi 13T reacondicionado",
     price: 269,
     description: "Gran potencia para juegos y fotografia con precio ajustado.",
     specs: "256GB · Pantalla 144Hz · Carga 67W · Garantia 12 meses",
-    images: ["https://fdn2.gsmarena.com/vv/bigpic/xiaomi-13t.jpg"]
+    images: ["Imagenes%20tienda/xiaomi.png"]
   },
   "xiaomi-redmi-note": {
     name: "Xiaomi Redmi Note reacondicionado",
     price: 219,
     description: "Opcion muy completa para uso diario y multimedia.",
     specs: "128GB · Bateria larga duracion · Dual SIM · Garantia 12 meses",
-    images: ["https://fdn2.gsmarena.com/vv/bigpic/xiaomi-redmi-note-13-pro-plus.jpg"]
+    images: ["Imagenes%20tienda/redmi-note-13-pro-plus-blanco-tienda.png"]
   },
   "fundas-antigolpes": {
     name: "Fundas antigolpes",
     price: 14.9,
     description: "Fundas resistentes para iPhone, Samsung y Xiaomi.",
     specs: "Material TPU + policarbonato · Varios colores",
-    images: ["Imagenes%20tienda/Foto_funda_1.jpg", "Imagenes%20tienda/Foto_funda_2.jpg"]
+    images: ["Imagenes%20tienda/Funda-tienda.png"]
   },
   "protector-templado": {
     name: "Protector de pantalla templado",
     price: 12,
     description: "Cristal templado 9H con colocacion profesional en tienda.",
     specs: "Cobertura completa · Resistente a golpes y arañazos",
-    images: ["Imagenes%20tienda/foto_protector_pantalla_1.jpg", "Imagenes%20tienda/Foto_protector_pantalla_2.jpg"]
+    images: ["Imagenes%20tienda/Protector_Pantalla.webp"]
   },
   "cargador-20w": {
     name: "Cargador rapido 20W",
@@ -758,21 +765,21 @@ const PRODUCT_CATALOG = {
     price: 24.9,
     description: "Auriculares inalambricos con estuche de carga y microfono HD.",
     specs: "Bluetooth 5.3 · Cancelacion pasiva · Hasta 20h de autonomia",
-    images: ["https://images.unsplash.com/photo-1546435770-a3e426bf472b?auto=format&fit=crop&w=900&q=80"]
+    images: ["Imagenes%20tienda/Fotos_cascos.webp"]
   },
   "powerbank-10000": {
     name: "Power bank 10000mAh",
     price: 19.9,
     description: "Bateria externa ideal para viajes y jornada completa.",
     specs: "10000mAh · 2 puertos de salida · Carga segura",
-    images: ["Imagenes%20tienda/Foto_powerbank.jpg"]
+    images: ["Imagenes%20tienda/Foto_powerbank.png"]
   },
   "soporte-coche-magnetico": {
     name: "Soporte coche magnetico",
     price: 11.9,
     description: "Soporte estable para rejilla del coche con giro 360 grados.",
     specs: "Iman reforzado · Instalacion rapida · Compatible universal",
-    images: ["Imagenes%20tienda/soporte_coche.jpg"]
+    images: ["Imagenes%20tienda/soporte_coche.png"]
   }
 };
 
