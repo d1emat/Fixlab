@@ -4,6 +4,7 @@ Sitio web estático de **FixLab S.L.** para reparación de móviles, reserva de 
 
 - **Web en producción:** [https://d1emat.github.io/Fixlab/](https://d1emat.github.io/Fixlab/)
 - **Repositorio:** [https://github.com/d1emat/Fixlab](https://github.com/d1emat/Fixlab)
+- **Repositorio antiguo** [https://github.com/d1emat/FixLab.github.io](https://github.com/d1emat/FixLab.github.io)
 
 ---
 
